@@ -1,0 +1,64 @@
+<div class="h-screen flex items-center justify-center w-full">
+    <div class="bg-white rounded-xl shadow p-10 w-11/12 sm:w-full sm:max-w-md flex flex-col gap-4">
+        <h1 class="text-primary font-bold text-2xl text-center">Signup</h1>
+        <form class="flex flex-col gap-5" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+            <div class="form-field">
+                <label for="name">Name</label>
+                <input id="name" type="text" class="input-field" formControlName="name" />
+            </div>
+            <div *ngIf="signupForm.get('name')?.touched && signupForm.get('name')?.invalid">
+                <small *ngIf="signupForm.get('name')?.errors?.['required']" class="error-text">
+                    Name is required.
+                </small>
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" type="email" class="input-field" formControlName="email" />
+            </div>
+            <div *ngIf="signupForm.get('email')?.touched && signupForm.get('email')?.invalid">
+                <small *ngIf="signupForm.get('email')?.errors?.['required']" class="error-text">
+                    Email is required.
+                </small>
+                <small *ngIf="signupForm.get('email')?.errors?.['email']" class="error-text">
+                    Please enter valid email address.
+                </small>
+            </div>
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input id="password" type="password" class="input-field" formControlName="password" />
+            </div>
+            <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">
+                <small *ngIf="signupForm.get('password')?.errors?.['required']" class="error-text">
+                    Password is required.
+                </small>
+            </div>
+            <div class="form-field">
+                <label for="confirm-password">Confirm Password</label>
+                <input id="confirm-password" type="password" class="input-field" formControlName="confirmPassword" />
+            </div>
+            <div *ngIf="signupForm.get('confirmPassword')?.touched && signupForm.get('confirmPassword')?.invalid">
+                <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']" class="error-text">
+                    Please confirm your password.
+                </small>
+            </div>
+            <div *ngIf="
+                signupForm.hasError('passwordMismatch') &&
+                (signupForm.get('confirmPassword')?.dirty || signupForm.get('confirmPassword')?.touched)
+                "
+                class="error-text">
+                Passwords do not match
+            </div>
+            <mat-checkbox>
+                <p class="text-gray-500">I agree to the <span class="text-primary">Terms & Conditions</span></p>
+            </mat-checkbox>
+            <button mat-flat-button class="w-full rounded-lg!">
+                Signup
+            </button>
+        </form>
+        <p class="text-gray-500">Already have an account? 
+            <a href="/login" class="text-primary">
+                Login
+            </a>
+        </p>
+    </div>
+</div>

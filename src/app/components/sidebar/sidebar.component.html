@@ -1,0 +1,33 @@
+<div class="h-screen bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
+
+  <div>
+    <div class="text-primary text-xl font-bold mb-4">
+      Save A Life
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="bg-blue-50 text-primary border-l-4 border-primary pl-3"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="group flex items-center gap-3 py-2 px-3 rounded-lg text-slate-700 font-medium transition-all duration-200
+               hover:bg-blue-50 hover:text-primary"
+      >
+        <mat-icon class="text-slate-500 transition-colors duration-200 group-hover:text-primary">
+          {{ item.icon }}
+        </mat-icon>
+
+        <span>{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div>
+    <button mat-flat-button class="w-full flex items-center gap-2 rounded-md!">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+
+</div>

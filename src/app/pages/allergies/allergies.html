@@ -1,1 +1,86 @@
-<p>allergies works!</p>
+<div class="p-2 bg-gray-50 min-h-screen">
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
+    <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Allergy</h2>
+
+    <form [formGroup]="allergyForm" class="flex flex-col gap-4 max-w-md">
+      <mat-form-field appearance="outline">
+        <input matInput formControlName="name" placeholder="Allergy name" class="text-sm! h-4!" />
+      </mat-form-field>
+      <small
+        *ngIf="allergyForm.get('name')?.invalid && allergyForm.get('name')?.touched"
+        class="error-text"
+      >
+        This field is required
+      </small>
+
+      <mat-form-field appearance="outline">
+        <textarea
+          [rows]="10"
+          matInput
+          formControlName="details"
+          placeholder="Details"
+          class="text-sm!"
+        ></textarea>
+      </mat-form-field>
+      <small
+        *ngIf="allergyForm.get('details')?.invalid && allergyForm.get('details')?.touched"
+        class="error-text"
+      >
+        This field is required
+      </small>
+
+      <button mat-flat-button color="primary" class="w-fit">Save</button>
+    </form>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+    <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
+      <h2 class="text-primary font-semibold text-xl md:text-2xl">Allergies</h2>
+      <app-search-bar (search)="applyFilter($event)"></app-search-bar>
+    </div>
+
+    <!-- Allergies Table -->
+    <app-allergy-table
+      [data]="dataSource"
+      [cols]="columns"
+      (onEdit)="openEditModal($event)"
+      (onDelete)="openDeleteConfirmationModal()"
+    />
+  </div>
+
+  <!-- Edit Allergy Modal -->
+  <ng-template #editModal>
+    <form [formGroup]="editAllergyForm" class="flex flex-col gap-4 max-w-md">
+      <mat-form-field appearance="outline">
+        <input matInput formControlName="name" placeholder="Allergy name" class="text-sm! h-4!" />
+      </mat-form-field>
+      <small
+        *ngIf="editAllergyForm.get('name')?.invalid && editAllergyForm.get('name')?.touched"
+        class="error-text"
+      >
+        This field is required
+      </small>
+
+      <mat-form-field appearance="outline">
+        <textarea
+          [rows]="10"
+          matInput
+          formControlName="details"
+          placeholder="Details"
+          class="text-sm!"
+        ></textarea>
+      </mat-form-field>
+      <small
+        *ngIf="editAllergyForm.get('details')?.invalid && editAllergyForm.get('details')?.touched"
+        class="error-text"
+      >
+        This field is required
+      </small>
+    </form>
+  </ng-template>
+
+  <!-- Delete Allergy Modal -->
+  <ng-template #deleteModal>
+    <h1>Delete Modal Content goes here</h1>
+  </ng-template>
+</div>

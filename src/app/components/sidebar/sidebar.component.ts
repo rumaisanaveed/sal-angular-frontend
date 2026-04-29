@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { MatAnchor, MatButton, MatFabButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,6 +11,8 @@ import { MatAnchor, MatButton, MatFabButton } from '@angular/material/button';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
+  isOpen: boolean = false;
+
   menuItems = [
     { label: 'Allergies', icon: 'eco', route: '/allergies' },
     {
@@ -18,7 +20,7 @@ export class SidebarComponent {
       icon: 'medication',
       route: '/medications',
     },
-    { label: 'Conditions', icon: 'healing', route: '/conditions' },
+    { label: 'Conditions', icon: 'monitor_heart', route: '/conditions' },
     { label: 'Procedures', icon: 'healing', route: '/procedures' },
     { label: 'Doctors', icon: 'medical_services', route: '/doctors' },
     {

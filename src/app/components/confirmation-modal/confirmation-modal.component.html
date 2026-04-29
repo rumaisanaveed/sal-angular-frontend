@@ -1,0 +1,49 @@
+<div class="p-6 w-100 flex flex-col gap-0">
+
+    <button mat-icon-button (click)="cancel()" class="self-end bg-gray-100! h-10! w-10! rounded-full!">
+        <mat-icon>close</mat-icon>
+    </button>
+
+  <div class="flex flex-col items-center justify-center">
+    <div class="flex items-center justify-center mb-4 h-16 w-16 rounded-full" [ngClass]="{
+        'bg-red-100!' : data.type === 'danger',
+        'bg-green-100!' : data.type === 'success'
+    }">
+        <mat-icon
+        [ngClass]="{
+            'text-red-500!' : data.type === 'danger',
+            'text-green-500!': data.type === 'success'
+        }"
+        >
+            {{ data.type === "success" ? 'check_circle' : "delete" }}
+        </mat-icon>
+    </div>
+
+    <h2 class="text-lg font-semibold mb-2">
+        {{ data.title }}
+    </h2>
+
+    <p class="text-gray-500 mb-6">
+        {{ data.description }}
+    </p>
+
+    <div class="flex justify-center gap-3 w-full">
+        <button (click)="cancel()" class="rounded-md! w-full! text-gray-600! border border-gray-300!">
+            Cancel
+        </button>
+
+        <button 
+            mat-button
+            [ngClass]="{
+                'bg-red-500!' : data.type === 'danger',
+                'bg-green-500!' : data.type === 'success',
+            }"
+            (click)="confirm()"
+            class="rounded-md! w-full! text-white!"
+        >
+            Yes, Continue
+        </button>
+    </div>
+  </div>
+
+</div>

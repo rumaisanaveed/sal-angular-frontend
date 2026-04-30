@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Allergy } from '../../core/interfaces/allergies';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { AllergyTableComponent } from '../../components/allergies/allergy-table/allergy-table.component';
+import { AllergyFormComponent } from '../../components/allergies/allergy-form/allergy-form.component';
 
 @Component({
   selector: 'app-allergies',
@@ -24,6 +25,7 @@ import { AllergyTableComponent } from '../../components/allergies/allergy-table/
     MatIconModule,
     CommonModule,
     AllergyTableComponent,
+    AllergyFormComponent,
   ],
   templateUrl: './allergies.html',
   styleUrl: './allergies.css',
@@ -74,6 +76,7 @@ export class Allergies {
       if (this.editAllergyForm.invalid) {
         return;
       }
+      // console.log('Edit allergy form data', this.editAllergyForm.value);
       ref.close();
     });
 
@@ -89,16 +92,20 @@ export class Allergies {
       })
       .subscribe((result) => {
         if (result) {
-          console.log('Deleted');
+          // console.log('Deleted');
         }
       });
+  }
+
+  addAllergy() {
+    console.log('Add allergy form values', this.allergyForm.value);
   }
 }
 
 const ALLERGIES_DATA: Allergy[] = [
   { name: 'Beans', details: "I've allergy from beans" },
-  { name: 'Beans', details: "I've allergy from beans" },
-  { name: 'Beans', details: "I've allergy from beans" },
+  { name: 'Bananas', details: "I've allergy from bananas" },
+  { name: 'Peas', details: "I've allergy from peas" },
   { name: 'Beans', details: "I've allergy from beans" },
   { name: 'Beans', details: "I've allergy from beans" },
   { name: 'Beans', details: "I've allergy from beans" },

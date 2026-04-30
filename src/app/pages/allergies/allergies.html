@@ -2,35 +2,9 @@
   <div class="bg-white shadow-sm p-6 mb-6 border border-gray-200" style="border-radius: 15px">
     <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Allergy</h2>
 
-    <form [formGroup]="allergyForm" class="flex flex-col gap-4 max-w-md">
-      <mat-form-field appearance="outline">
-        <input matInput formControlName="name" placeholder="Allergy name" class="text-sm! h-4!" />
-      </mat-form-field>
-      <small
-        *ngIf="allergyForm.get('name')?.invalid && allergyForm.get('name')?.touched"
-        class="error-text"
-      >
-        This field is required
-      </small>
-
-      <mat-form-field appearance="outline">
-        <textarea
-          [rows]="10"
-          matInput
-          formControlName="details"
-          placeholder="Details"
-          class="text-sm!"
-        ></textarea>
-      </mat-form-field>
-      <small
-        *ngIf="allergyForm.get('details')?.invalid && allergyForm.get('details')?.touched"
-        class="error-text"
-      >
-        This field is required
-      </small>
-
+    <app-allergy-form [allergyForm]="allergyForm" (submit)="addAllergy()">
       <button mat-flat-button color="primary" class="w-fit">Save</button>
-    </form>
+    </app-allergy-form>
   </div>
 
   <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
@@ -50,33 +24,7 @@
 
   <!-- Edit Allergy Modal -->
   <ng-template #editModal>
-    <form [formGroup]="editAllergyForm" class="flex flex-col gap-4 max-w-full">
-      <mat-form-field appearance="outline">
-        <input matInput formControlName="name" placeholder="Allergy name" class="text-sm! h-4!" />
-      </mat-form-field>
-      <small
-        *ngIf="editAllergyForm.get('name')?.invalid && editAllergyForm.get('name')?.touched"
-        class="error-text"
-      >
-        This field is required
-      </small>
-
-      <mat-form-field appearance="outline">
-        <textarea
-          [rows]="10"
-          matInput
-          formControlName="details"
-          placeholder="Details"
-          class="text-sm!"
-        ></textarea>
-      </mat-form-field>
-      <small
-        *ngIf="editAllergyForm.get('details')?.invalid && editAllergyForm.get('details')?.touched"
-        class="error-text"
-      >
-        This field is required
-      </small>
-    </form>
+    <app-allergy-form [allergyForm]="editAllergyForm" />
   </ng-template>
 
   <!-- Delete Allergy Modal -->

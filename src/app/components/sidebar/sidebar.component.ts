@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   isOpen: boolean = false;
+  @Output() close = new EventEmitter<void>();
 
   menuItems = [
     { label: 'Allergies', icon: 'eco', route: '/allergies' },

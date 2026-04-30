@@ -1,7 +1,17 @@
-<div class="flex flex-col h-screen md:flex-row">
-  <app-sidebar />
+<mat-sidenav-container class="h-screen">
+  <mat-sidenav #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">
+    <app-sidebar (close)="drawer.close()"></app-sidebar>
+  </mat-sidenav>
 
-  <div class="flex-1 p-4 bg-gray-50 md:overflow-y-auto">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+  <mat-sidenav-content class="overflow-y-auto">
+    <div class="min-h-full w-full p-6">
+      <div class="md:hidden mb-4">
+        <button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

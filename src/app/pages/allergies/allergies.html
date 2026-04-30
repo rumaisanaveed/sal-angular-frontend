@@ -1,5 +1,5 @@
-<div class="p-2 bg-gray-50 min-h-screen">
-  <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
+<div class="p-2 min-h-screen">
+  <div class="bg-white shadow-sm p-6 mb-6 border border-gray-200" style="border-radius: 15px">
     <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Allergy</h2>
 
     <form [formGroup]="allergyForm" class="flex flex-col gap-4 max-w-md">
@@ -33,7 +33,7 @@
     </form>
   </div>
 
-  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
     <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
       <h2 class="text-primary font-semibold text-xl md:text-2xl">Allergies</h2>
       <app-search-bar (search)="applyFilter($event)"></app-search-bar>
@@ -50,7 +50,7 @@
 
   <!-- Edit Allergy Modal -->
   <ng-template #editModal>
-    <form [formGroup]="editAllergyForm" class="flex flex-col gap-4 max-w-md">
+    <form [formGroup]="editAllergyForm" class="flex flex-col gap-4 max-w-full">
       <mat-form-field appearance="outline">
         <input matInput formControlName="name" placeholder="Allergy name" class="text-sm! h-4!" />
       </mat-form-field>

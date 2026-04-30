@@ -1,56 +1,33 @@
-<div class="h-full w-64">
+<div
+  class="h-screen flex flex-col justify-between overflow-hidden bg-white border-r border-gray-200 p-6"
+>
+  <div>
+    <div class="flex justify-between items-center mb-4">
+      <div class="text-primary text-xl font-bold">Save A Life</div>
 
-  <div
-    *ngIf="isOpen"
-    class="fixed inset-0 bg-black/50 z-40 md:hidden"
-    (click)="isOpen = false"
-  ></div>
-
-  <div
-    class="fixed md:sticky z-50 md:top-0 left-0 h-full w-72 shrink-0 bg-white border-r border-gray-200 p-6 flex flex-col justify-between
-         transform transition-transform duration-300
-         md:translate-x-0"
-    [class.translate-x-0]="isOpen"
-    [class.-translate-x-full]="!isOpen"
-  >
-    <div>
-      <div class="flex justify-between items-center mb-4">
-        <div class="text-primary text-xl font-bold">
-          Save A Life
-        </div>
-
-        <button class="md:hidden" (click)="isOpen = false">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <a
-          *ngFor="let item of menuItems"
-          [routerLink]="item.route"
-          routerLinkActive="bg-blue-50 text-primary border-l-4 border-primary pl-3"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="group flex items-center gap-3 py-2 px-3 rounded-lg text-slate-700 font-medium
-                 hover:bg-blue-50 hover:text-primary"
-        >
-          <mat-icon class="text-slate-500 group-hover:text-primary">
-            {{ item.icon }}
-          </mat-icon>
-          <span>{{ item.label }}</span>
-        </a>
-      </div>
-    </div>
-
-    <button mat-flat-button class="w-full flex items-center gap-2 rounded-md!">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
-    </button>
-  </div>
-
-    <div class="p-4 md:hidden">
-      <button (click)="isOpen = true">
-        <mat-icon>menu</mat-icon>
+      <button class="md:hidden" (click)="close.emit()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
 
+    <div class="flex-1 overflow-y-auto flex flex-col gap-2">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="bg-blue-50 text-primary border-l-4 border-primary pl-3"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="group flex items-center gap-3 py-2 px-3 rounded-lg text-slate-700 font-medium hover:bg-blue-50 hover:text-primary"
+      >
+        <mat-icon class="text-slate-500 group-hover:text-primary">
+          {{ item.icon }}
+        </mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <button mat-flat-button class="w-full flex items-center gap-2 rounded-md!">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
 </div>

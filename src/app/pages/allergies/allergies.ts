@@ -76,7 +76,6 @@ export class Allergies {
       if (this.editAllergyForm.invalid) {
         return;
       }
-      // console.log('Edit allergy form data', this.editAllergyForm.value);
       ref.close();
     });
 
@@ -92,7 +91,6 @@ export class Allergies {
       })
       .subscribe((result) => {
         if (result) {
-          // console.log('Deleted');
         }
       });
   }

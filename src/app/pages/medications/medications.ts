@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
@@ -14,6 +14,10 @@ import { InputModeEnum } from '../../core/constants';
 import { Medication } from '../../core/interfaces/medication';
 import { SelectableListComponent } from '../../components/selectable-list/selectable-list.component';
 import { SelectedItemComponent } from '../../components/selected-item/selected-item.component';
+import { CdkNoDataRow } from '@angular/cdk/table';
+import { ModalService } from '../../core/services/modal-service/modal.service';
+import { MatIconModule } from '@angular/material/icon';
+import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 
 @Component({
   selector: 'app-medication-form',
@@ -31,20 +35,32 @@ import { SelectedItemComponent } from '../../components/selected-item/selected-i
     ModeSwitchCardComponent,
     SelectedItemComponent,
     SelectableListComponent,
+    MatIconModule,
   ],
 })
 export class Medications {
   medicationForm!: FormGroup;
+  editMedicationForm!: FormGroup;
   mode: InputModeEnum = InputModeEnum.Search;
   dataSource = new MatTableDataSource(MEDICATIONS_DATA);
   columns = ['name', 'dosage', 'actions'];
 
-  constructor(private fb: FormBuilder) {
+  @ViewChild('editModal') editModalContent!: TemplateRef<any>;
+
+  constructor(
+    private fb: FormBuilder,
+    private modal: ModalService,
+    private confirmService: ConfirmationModalService,
+  ) {
     this.medicationForm = this.fb.group({
       mode: ['search'],
       name: [''],
       dosage: [''],
       search: [''],
+    });
+    this.editMedicationForm = this.fb.group({
+      name: ['', Validators.required],
+      dosage: ['', Validators.required],
     });
   }
 
@@ -164,9 +180,33 @@ export class Medications {
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  openEditModal(medication: Medication) {}
+  openEditModal(medication: Medication) {
+    this.selectedMedication = medication;
+    this.editMedicationForm.patchValue(medication);
+    const ref = this.modal.open('Edit Medication', this.editModalContent);
+    ref.componentInstance.save.subscribe(() => {
+      if (this.editMedicationForm.invalid) {
+        return;
+      }
+      // console.log('Edit allergy form data', this.editAllergyForm.value);
+      ref.close();
+    });
 
-  openDeleteModal() {}
+    ref.componentInstance.cancel.subscribe(() => {});
+  }
+
+  openDeleteModal() {
+    this.confirmService
+      .open({
+        title: 'Delete Medication',
+        description: 'Are you sure you want to delete this medication?',
+        type: 'danger',
+      })
+      .subscribe((result) => {
+        if (result) {
+        }
+      });
+  }
 
   submit() {
     if (this.mode === 'manual' && this.medicationForm.invalid) {
@@ -179,30 +219,30 @@ export class Medications {
 const MEDICATIONS_DATA: Medication[] = [
   {
     name: 'Paracetamol',
-    dosage: '500 mg',
+    dosage: '500mg',
   },
   {
     name: 'Ibuprofen',
-    dosage: '200 mg',
+    dosage: '200mg',
   },
   {
     name: 'Amoxicillin',
-    dosage: '250 mg',
+    dosage: '250mg',
   },
   {
     name: 'Azithromycin',
-    dosage: '500 mg',
+    dosage: '500mg',
   },
   {
     name: 'Metformin',
-    dosage: '500 mg',
+    dosage: '500mg',
   },
   {
     name: 'Aspirin',
-    dosage: '75 mg',
+    dosage: '75mg',
   },
   {
     name: 'Loratadine',
-    dosage: '10 mg',
+    dosage: '10mg',
   },
 ];

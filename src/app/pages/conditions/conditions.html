@@ -70,9 +70,54 @@
       <h2 class="text-primary font-semibold text-xl md:text-2xl">Conditions</h2>
       <app-search-bar (search)="applyFilter($event)"></app-search-bar>
     </div>
-    <app-conditions-table [data]="dataSource" [cols]="['name', 'details']" />
+    <app-conditions-table
+      [data]="dataSource"
+      [cols]="['name', 'details', 'actions']"
+      (onEdit)="openEditModal($event)"
+      (onDelete)="openDeleteModal()"
+    />
   </div>
-</div>
 
-<!-- TODO -->
-<!-- Edit and del modal -->
+  <ng-template #editModal>
+    <form [formGroup]="editConditionForm" class="flex flex-col gap-3">
+      <!-- Name -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" placeholder="Medication Name" />
+        </mat-form-field>
+
+        <small
+          *ngIf="editConditionForm.get('name')?.invalid && editConditionForm.get('name')?.touched"
+          class="text-red-500 text-xs"
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Details -->
+      <div #editModal>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Details</mat-label>
+          <textarea
+            [rows]="10"
+            matInput
+            formControlName="details"
+            placeholder="Details"
+            class="text-sm!"
+          ></textarea>
+        </mat-form-field>
+        <small
+          *ngIf="
+            editConditionForm.get('details')?.invalid && editConditionForm.get('details')?.touched
+          "
+          class="error-text"
+        >
+          This field is required
+        </small>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #deleteModal></ng-template>
+</div>

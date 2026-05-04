@@ -3,10 +3,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Medication } from '../../../core/interfaces/medication';
 import { DataSource } from '@angular/cdk/table';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-medication-table',
-  imports: [MatTableModule, MatIconModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './medication-table.component.html',
   styleUrl: './medication-table.component.css',
 })

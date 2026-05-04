@@ -83,7 +83,46 @@
       (onDelete)="openDeleteModal()"
     />
   </div>
-</div>
 
-<!-- TODO -->
-<!-- Edit and del modal -->
+  <ng-template #editModal>
+    <form [formGroup]="editMedicationForm" class="flex flex-col gap-3">
+      <!-- Name -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Medication name</mat-label>
+          <input matInput formControlName="name" placeholder="Medication Name" />
+        </mat-form-field>
+
+        <small
+          *ngIf="editMedicationForm.get('name')?.invalid && editMedicationForm.get('name')?.touched"
+          class="text-red-500 text-xs"
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Dosage -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full compact">
+          <mat-label>Dosage</mat-label>
+          <mat-select formControlName="dosage">
+            <mat-option *ngFor="let dose of dosages" [value]="dose.value">{{
+              dose.label
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <small
+          *ngIf="
+            editMedicationForm.get('dosage')?.invalid && editMedicationForm.get('dosage')?.touched
+          "
+          class="text-red-500 text-xs"
+        >
+          This field is required
+        </small>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #deleteModal> </ng-template>
+</div>

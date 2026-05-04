@@ -1,11 +1,13 @@
 import { DataSource } from '@angular/cdk/table';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-conditions-table',
-  imports: [MatTableModule, MatIconModule],
+  imports: [MatTableModule, CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './conditions-table.component.html',
   styleUrl: './conditions-table.component.css',
 })

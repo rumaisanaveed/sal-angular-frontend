@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,12 +11,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConditionsTableComponent } from '../../components/conditions/conditions-table/conditions-table.component';
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { SelectableListComponent } from '../../components/selectable-list/selectable-list.component';
 import { SelectedItemComponent } from '../../components/selected-item/selected-item.component';
 import { InputModeEnum } from '../../core/constants';
-import { ConditionsTableComponent } from '../../components/conditions/conditions-table/conditions-table.component';
+import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
+import { ModalService } from '../../core/services/modal-service/modal.service';
 
 @Component({
   selector: 'app-condition',
@@ -42,6 +44,9 @@ export class Conditions implements OnInit {
 
   mode: InputModeEnum = InputModeEnum.Search;
 
+  editConditionForm!: FormGroup;
+  @ViewChild('editModal') editModalContent!: TemplateRef<any>;
+
   searchResults: Condition[] = [
     {
       name: 'Hypertension',
@@ -60,7 +65,11 @@ export class Conditions implements OnInit {
 
   dataSource = new MatTableDataSource<Condition>(ALL_CONDITIONS);
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private modal: ModalService,
+    private confirmService: ConfirmationModalService,
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -76,6 +85,10 @@ export class Conditions implements OnInit {
     });
     this.deviceForm = this.fb.group({
       device: ['', Validators.required],
+    });
+    this.editConditionForm = this.fb.group({
+      name: ['', Validators.required],
+      details: ['', Validators.required],
     });
   }
 
@@ -125,6 +138,34 @@ export class Conditions implements OnInit {
 
   applyFilter(query: string) {
     this.dataSource.filter = query.trim().toLowerCase();
+  }
+
+  openEditModal(cond: Condition) {
+    this.selectedCondition = cond;
+    this.editConditionForm.patchValue(cond);
+    const ref = this.modal.open('Edit Condition', this.editModalContent);
+
+    ref.componentInstance.save.subscribe(() => {
+      if (this.editConditionForm.invalid) {
+        return;
+      }
+      ref.close();
+    });
+
+    ref.componentInstance.cancel.subscribe(() => {});
+  }
+
+  openDeleteModal() {
+    this.confirmService
+      .open({
+        title: 'Delete Condition',
+        description: 'Are you sure you want to delete this condition?',
+        type: 'danger',
+      })
+      .subscribe((result) => {
+        if (result) {
+        }
+      });
   }
 }
 

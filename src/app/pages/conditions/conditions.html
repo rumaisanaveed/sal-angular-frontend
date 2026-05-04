@@ -1,1 +1,78 @@
-<p>conditions works!</p>
+<div class="flex flex-col gap-6 min-h-screen bg-gray-50">
+  <app-mode-switch-card
+    title="Add Condition"
+    subtitle="Choose how you want to add a condition"
+    [mode]="mode"
+    (modeChange)="switchMode($event)"
+  >
+    <div *ngIf="mode === 'search'" class="space-y-3">
+      <app-search-bar class="w-full mb-4" (search)="searchCondition($event)" />
+
+      <!-- Search Results -->
+
+      <app-selectable-list
+        [items]="searchResults"
+        labelKey="name"
+        subLabelKey="details"
+        (onSelect)="selectCondition($event)"
+      />
+
+      @if (selectedCondition) {
+        <app-selected-item
+          [item]="{
+            title: selectedCondition.name || '',
+            subtitle: selectedCondition.details || '',
+          }"
+        />
+      }
+    </div>
+
+    <form [formGroup]="conditionForm" (ngSubmit)="submit()" class="space-y-5">
+      <div *ngIf="mode === 'manual'" class="space-y-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+        <div
+          *ngIf="conditionForm.get('name')?.invalid && conditionForm.get('name')?.touched"
+          class="text-red-500 text-xs pb-2"
+        >
+          This field is required
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Details</mat-label>
+          <textarea
+            [rows]="10"
+            matInput
+            formControlName="details"
+            placeholder="Details"
+            class="text-sm!"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="conditionForm.get('details')?.invalid && conditionForm.get('details')?.touched"
+          class="text-red-500 text-xs pb-2"
+        >
+          This field is required
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button mat-flat-button color="primary">Save</button>
+      </div>
+    </form>
+  </app-mode-switch-card>
+
+  <!-- Conditions table -->
+
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
+    <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
+      <h2 class="text-primary font-semibold text-xl md:text-2xl">Conditions</h2>
+      <app-search-bar (search)="applyFilter($event)"></app-search-bar>
+    </div>
+    <app-conditions-table [data]="dataSource" [cols]="['name', 'details']" />
+  </div>
+</div>
+
+<!-- TODO -->
+<!-- Edit and del modal -->

@@ -97,16 +97,14 @@ export class Allergies {
       });
   }
 
-  addAllergy() {
-    console.log('Add allergy form values', this.allergyForm.value);
-  }
+  addAllergy() {}
 }
 
 const ALLERGIES_DATA: Allergy[] = [
-  { name: 'Beans', details: "I've allergy from beans" },
-  { name: 'Bananas', details: "I've allergy from bananas" },
-  { name: 'Peas', details: "I've allergy from peas" },
-  { name: 'Beans', details: "I've allergy from beans" },
-  { name: 'Beans', details: "I've allergy from beans" },
-  { name: 'Beans', details: "I've allergy from beans" },
+  { name: 'Peanuts', details: 'Causes skin rash and itching' },
+  { name: 'Shellfish', details: 'Leads to swelling and breathing difficulty' },
+  { name: 'Dairy', details: 'Triggers stomach cramps and bloating' },
+  { name: 'Eggs', details: 'Causes hives and nausea' },
+  { name: 'Soy', details: 'Results in mild skin irritation' },
+  { name: 'Gluten', details: 'Causes digestive discomfort and fatigue' },
 ];

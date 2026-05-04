@@ -3,6 +3,7 @@ import { Allergy } from '../../../core/interfaces/allergies';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-allergy-table',
@@ -11,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './allergy-table.component.css',
 })
 export class AllergyTableComponent {
-  @Input() data: any = [];
+  @Input() data!: DataSource<Allergy>;
   @Input() cols: string[] = [];
   @Output() onEdit = new EventEmitter<Allergy>();
   @Output() onDelete = new EventEmitter();

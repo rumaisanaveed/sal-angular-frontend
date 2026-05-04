@@ -13,6 +13,7 @@ import { History } from './pages/history/history';
 import { Insurance } from './pages/insurance/insurance';
 import { SalCard } from './pages/sal-card/sal-card';
 import { Settings } from './pages/settings/settings';
+import { Care } from './pages/care/care';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,10 @@ export const routes: Routes = [
       {
         path: 'conditions',
         component: Conditions,
+      },
+      {
+        path: 'care',
+        component: Care,
       },
       {
         path: 'procedures',

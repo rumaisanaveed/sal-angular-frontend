@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Medication } from '../../../core/interfaces/medication';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-medication-table',
@@ -10,7 +11,7 @@ import { Medication } from '../../../core/interfaces/medication';
   styleUrl: './medication-table.component.css',
 })
 export class MedicationTableComponent {
-  @Input() data: any;
+  @Input() data!: DataSource<Medication>;
   @Input() cols: string[] = [];
 
   @Output() onEdit = new EventEmitter<Medication>();

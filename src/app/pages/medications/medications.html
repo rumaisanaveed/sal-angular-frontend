@@ -1,55 +1,36 @@
 <div class="flex flex-col gap-6 min-h-screen bg-gray-50">
-  <div class="w-full sm:max-w-lg bg-white shadow-md rounded-xl p-6 space-y-6">
-    <!-- HEADER -->
-    <div>
-      <h2 class="text-xl font-semibold text-gray-800">Add Medication</h2>
-      <p class="text-sm text-gray-500">Choose how you want to add medication</p>
-    </div>
-
+  <app-mode-switch-card
+    title="Add Medication"
+    subtitle="Choose how you want to add medication"
+    [mode]="mode"
+    (modeChange)="switchMode($event)"
+  >
     <form [formGroup]="medicationForm" (ngSubmit)="submit()" class="space-y-5">
-      <!-- MODE SWITCH (styled like tabs) -->
-      <div class="flex bg-gray-100 p-1 rounded-lg">
-        <button
-          *ngFor="let item of modes"
-          type="button"
-          (click)="switchMode(item.value)"
-          class="flex-1 py-2 text-sm rounded-md transition"
-          [ngClass]="mode === item.value ? 'bg-white shadow font-medium' : 'text-gray-500'"
-        >
-          {{ item.label }}
-        </button>
-      </div>
-
       <!-- ================= SEARCH MODE ================= -->
       <div *ngIf="mode === 'search'" class="space-y-3">
         <app-search-bar class="w-full mb-4" (search)="searchMedication($event)" />
 
-        <!-- RESULTS (card dropdown style) -->
-        <div
-          class="border border-gray-300 rounded-lg bg-white shadow-sm max-h-44 overflow-auto divide-y divide-gray-300"
-        >
-          <div
-            *ngFor="let med of searchResults"
-            (click)="selectMedication(med)"
-            class="p-3 cursor-pointer hover:bg-gray-50 transition"
-          >
-            <div class="font-medium text-gray-800">{{ med.name }}</div>
-            <div class="text-xs text-gray-500">{{ med.dosage }}</div>
-          </div>
-        </div>
+        <!-- Search Results -->
+        <app-selectable-list
+          [items]="searchResults"
+          labelKey="name"
+          subLabelKey="dosage"
+          (onSelect)="selectMedication($event)"
+        />
 
-        <!-- SELECTED -->
-        <div *ngIf="selectedMedication" class="p-4 rounded-lg bg-blue-50 border border-blue-100">
-          <p class="font-semibold text-gray-800">
-            {{ selectedMedication.name }}
-          </p>
-          <p class="text-sm text-gray-600">Dosage: {{ selectedMedication.dosage }}</p>
-        </div>
+        @if (selectedMedication) {
+          <app-selected-item
+            [item]="{
+              title: selectedMedication.name || '',
+              subtitle: selectedMedication.dosage || '',
+            }"
+          />
+        }
       </div>
 
-      <!-- ================= MANUAL MODE ================= -->
+      <!-- ================= Manual Mode ================= -->
       <div *ngIf="mode === 'manual'" class="space-y-4">
-        <!-- NAME -->
+        <!-- Name -->
         <div>
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Medication name</mat-label>
@@ -64,14 +45,14 @@
           </small>
         </div>
 
-        <!-- DOSAGE -->
+        <!-- Dosage -->
         <div>
           <mat-form-field appearance="outline" class="w-full compact">
             <mat-label>Dosage</mat-label>
             <mat-select formControlName="dosage">
-              <mat-option value="100mg">100mg</mat-option>
-              <mat-option value="200mg">200mg</mat-option>
-              <mat-option value="500mg">500mg</mat-option>
+              <mat-option *ngFor="let dose of dosages" [value]="dose.value">{{
+                dose.label
+              }}</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -84,12 +65,11 @@
         </div>
       </div>
 
-      <!-- SUBMIT -->
       <div class="flex justify-end pt-2">
         <button mat-flat-button color="primary" class="w-fit">Save</button>
       </div>
     </form>
-  </div>
+  </app-mode-switch-card>
 
   <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
     <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
@@ -104,3 +84,6 @@
     />
   </div>
 </div>
+
+<!-- TODO -->
+<!-- Edit and del modal -->

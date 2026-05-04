@@ -1,0 +1,22 @@
+<div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+  <h2 class="text-primary font-semibold text-xl mb-4">Medical Devices</h2>
+
+  <form class="flex gap-3" [formGroup]="form">
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Add Device</mat-label>
+      <input matInput formControlName="device" />
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" [disabled]="form.invalid">Add</button>
+  </form>
+
+  @if (devices.length > 0) {
+    <div class="flex flex-wrap gap-2 mt-4">
+      <app-chip *ngFor="let device of devices" [label]="device" />
+    </div>
+  } @else {
+    <div class="flex items-center justify-center py-10">
+      <p>No Devices Found!</p>
+    </div>
+  }
+</div>

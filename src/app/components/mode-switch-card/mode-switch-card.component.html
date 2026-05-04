@@ -1,0 +1,23 @@
+<div class="w-full sm:max-w-lg bg-white shadow-md rounded-xl p-6 space-y-6">
+  <!-- Header -->
+  <div>
+    <h2 class="text-xl font-semibold text-gray-800">{{ title }}</h2>
+    <p class="text-sm text-gray-500">{{ subtitle }}</p>
+  </div>
+
+  <!-- Mode switch tabs -->
+  <div class="flex bg-gray-100 p-1 rounded-lg">
+    <button
+      *ngFor="let item of modes"
+      type="button"
+      (click)="switchMode(item.value)"
+      class="flex-1 py-2 text-sm rounded-md transition"
+      [ngClass]="mode === item.value ? 'bg-white shadow font-medium' : 'text-gray-500'"
+    >
+      {{ item.label }}
+    </button>
+  </div>
+
+  <!-- Dynamic content -->
+  <ng-content></ng-content>
+</div>

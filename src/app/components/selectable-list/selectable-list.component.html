@@ -1,0 +1,15 @@
+<div class="bg-white max-h-44 overflow-auto flex flex-col gap-2">
+  <div
+    *ngFor="let item of items"
+    (click)="select(item)"
+    class="p-3 cursor-pointer hover:bg-gray-50 transition border border-gray-300 rounded-lg"
+  >
+    <div class="font-medium text-gray-800">
+      {{ item[labelKey] }}
+    </div>
+
+    <div *ngIf="subLabelKey" class="text-xs text-gray-500">
+      {{ item[subLabelKey] }}
+    </div>
+  </div>
+</div>

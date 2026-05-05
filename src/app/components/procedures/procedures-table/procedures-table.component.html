@@ -9,12 +9,39 @@
       </td>
     </ng-container>
 
-    <!-- Dosage -->
-    <ng-container matColumnDef="dosage">
-      <th mat-header-cell *matHeaderCellDef>Dosage</th>
+    <!-- Type -->
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.dosage }}
+        {{ element.type }}
+      </td>
+    </ng-container>
+
+    <!-- Code -->
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef>Code</th>
+
+      <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
+        {{ element.code }}
+      </td>
+    </ng-container>
+
+    <!-- Date -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+
+      <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
+        {{ element.date }}
+      </td>
+    </ng-container>
+
+    <!-- Details -->
+    <ng-container matColumnDef="details">
+      <th mat-header-cell *matHeaderCellDef>Details</th>
+
+      <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
+        {{ element.details }}
       </td>
     </ng-container>
 

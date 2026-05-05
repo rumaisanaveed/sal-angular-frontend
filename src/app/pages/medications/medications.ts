@@ -4,20 +4,19 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { MedicationTableComponent } from '../../components/medications/medication-table.component/medication-table.component';
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
-import { InputModeEnum } from '../../core/constants';
-import { Medication } from '../../core/interfaces/medication';
 import { SelectableListComponent } from '../../components/selectable-list/selectable-list.component';
 import { SelectedItemComponent } from '../../components/selected-item/selected-item.component';
-import { CdkNoDataRow } from '@angular/cdk/table';
-import { ModalService } from '../../core/services/modal-service/modal.service';
-import { MatIconModule } from '@angular/material/icon';
+import { InputModeEnum } from '../../core/constants';
+import { Medication } from '../../core/interfaces/medication';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
+import { ModalService } from '../../core/services/modal-service/modal.service';
 
 @Component({
   selector: 'app-medication-form',
@@ -188,7 +187,6 @@ export class Medications {
       if (this.editMedicationForm.invalid) {
         return;
       }
-      // console.log('Edit allergy form data', this.editAllergyForm.value);
       ref.close();
     });
 
@@ -196,16 +194,11 @@ export class Medications {
   }
 
   openDeleteModal() {
-    this.confirmService
-      .open({
-        title: 'Delete Medication',
-        description: 'Are you sure you want to delete this medication?',
-        type: 'danger',
-      })
-      .subscribe((result) => {
-        if (result) {
-        }
-      });
+    this.confirmService.open({
+      title: 'Delete Medication',
+      description: 'Are you sure you want to delete this medication?',
+      type: 'danger',
+    });
   }
 
   submit() {

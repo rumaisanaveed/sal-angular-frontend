@@ -64,17 +64,17 @@
   <!-- tables -->
   <div class="lg:col-span-3 space-y-6">
     <!-- Main Doctors -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border">
+    <div class="bg-white rounded-xl shadow-sm p-6">
       <h2 class="text-lg font-semibold mb-4">Main Doctors</h2>
 
-      <!-- <app-doctors-table [data]="mainDoctors"></app-doctors-table> -->
+      <app-doctors-table [data]="mainDoctors" [cols]="columns"></app-doctors-table>
     </div>
+  </div>
 
-    <!-- Other Doctors -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border">
-      <h2 class="text-lg font-semibold mb-4">Other Doctors</h2>
+  <!-- Other Doctors -->
+  <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-5">
+    <h2 class="text-lg font-semibold mb-4">Other Doctors</h2>
 
-      <!-- <app-doctors-table [data]="otherDoctors"></app-doctors-table> -->
-    </div>
+    <app-doctors-table class="w-full" [data]="otherDoctors" [cols]="columns"></app-doctors-table>
   </div>
 </div>

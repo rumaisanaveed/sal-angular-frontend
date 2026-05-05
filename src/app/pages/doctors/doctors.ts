@@ -13,10 +13,12 @@ import {
 } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Doctor } from '../../core/interfaces/doctors';
+import { Doctor, DoctorsList } from '../../core/interfaces/doctors';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { DoctorFormComponent } from '../../components/doctors/doctor-form/doctor-form.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { DoctorsTableComponent } from '../../components/doctors/doctors-table/doctors-table.component';
 
 @Component({
   selector: 'app-doctors',
@@ -32,6 +34,7 @@ import { DoctorFormComponent } from '../../components/doctors/doctor-form/doctor
     MatRadioModule,
     FormsModule,
     DoctorFormComponent,
+    DoctorsTableComponent,
   ],
   templateUrl: './doctors.html',
   styleUrl: './doctors.css',
@@ -42,6 +45,11 @@ export class Doctors {
 
   selectedDoctor: Doctor | null = null;
   selectedDoctorType: 'main' | 'other' = 'other';
+
+  mainDoctors = new MatTableDataSource<DoctorsList>(MAIN_DOCTORS);
+  otherDoctors = new MatTableDataSource<DoctorsList>(OTHER_DOCTORS);
+
+  columns = ['name', 'speciality', 'actions'];
 
   doctorFields: { label: string; key: keyof Doctor }[] = [
     { label: 'Name', key: 'name' },
@@ -88,9 +96,6 @@ export class Doctors {
       gender: 'male',
     },
   ];
-
-  mainDoctors: Doctor[] = [];
-  otherDoctors: Doctor[] = [];
 
   allDoctors = [...this.searchResults];
 
@@ -139,3 +144,99 @@ export class Doctors {
     );
   }
 }
+
+const MAIN_DOCTORS: DoctorsList[] = [
+  {
+    name: 'Dr. Sarah Johnson',
+    speciality: 'Cardiology',
+    status: 'current',
+  },
+  {
+    name: 'Dr. Michael Brown',
+    speciality: 'Neurology',
+    status: 'current',
+  },
+  {
+    name: 'Dr. Emily Davis',
+    speciality: 'Pediatrics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+  {
+    name: 'Dr. James Wilson',
+    speciality: 'Orthopedics',
+    status: 'current',
+  },
+];
+
+const OTHER_DOCTORS: DoctorsList[] = [
+  {
+    name: 'Dr. Ali Khan',
+    speciality: 'General Practice',
+    status: 'past',
+  },
+  {
+    name: 'Dr. Olivia Martin',
+    speciality: 'Neurology',
+    status: 'past',
+  },
+  {
+    name: 'Dr. John Smith',
+    speciality: 'Cardiology',
+    status: 'past',
+  },
+  {
+    name: 'Dr. Sophia Lee',
+    speciality: 'Dermatology',
+    status: 'past',
+  },
+  {
+    name: 'Dr. David Miller',
+    speciality: 'Orthopedics',
+    status: 'past',
+  },
+  {
+    name: 'Dr. Sophia Lee',
+    speciality: 'Dermatology',
+    status: 'past',
+  },
+  {
+    name: 'Dr. David Miller',
+    speciality: 'Orthopedics',
+    status: 'past',
+  },
+  {
+    name: 'Dr. Sophia Lee',
+    speciality: 'Dermatology',
+    status: 'past',
+  },
+  {
+    name: 'Dr. David Miller',
+    speciality: 'Orthopedics',
+    status: 'past',
+  },
+];

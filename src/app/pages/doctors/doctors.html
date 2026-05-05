@@ -1,1 +1,80 @@
-<p>doctors works!</p>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+  <div class="lg:col-span-2 space-y-6">
+    <app-mode-switch-card
+      title="Add Doctor"
+      subtitle="Search or manually add doctor"
+      [(mode)]="mode"
+    >
+      <!-- SEARCH MODE -->
+      <div *ngIf="mode === 'search'" class="flex flex-col gap-6">
+        <app-search-bar class="w-full" (search)="searchDoctors($event)"></app-search-bar>
+
+        <!-- Search Results -->
+        <div *ngIf="searchResults.length" class="border rounded-lg divide-y">
+          <div *ngFor="let doc of searchResults" class="p-4 flex justify-between items-start">
+            <div>
+              <p class="font-medium text-gray-800">{{ doc.name }}</p>
+              <p class="text-sm text-gray-500">
+                {{ doc.speciality || 'N/A' }} • {{ doc.city || '-' }}
+              </p>
+            </div>
+
+            <button mat-stroked-button color="primary" (click)="selectDoctor(doc)">Add</button>
+          </div>
+        </div>
+
+        <div
+          *ngIf="selectedDoctor"
+          class="p-4 rounded-lg bg-blue-50 border border-blue-100 mt-3 space-y-3"
+        >
+          <!-- Doctor Info -->
+          <div *ngFor="let field of doctorFields">
+            <p *ngIf="selectedDoctor[field.key]" class="text-sm text-gray-600">
+              <span class="font-medium text-gray-800"> {{ field.label }}: </span>
+              {{ selectedDoctor[field.key] }}
+            </p>
+          </div>
+
+          <!-- Main/Other -->
+          <div class="pt-3 border-t border-blue-200">
+            <p class="text-sm font-medium text-gray-700 mb-2">Assign Doctor Type</p>
+
+            <mat-radio-group [(ngModel)]="selectedDoctorType" class="flex gap-4">
+              <mat-radio-button value="main">Main Doctor</mat-radio-button>
+              <mat-radio-button value="other">Other Doctor</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <!-- Add Button -->
+          <div class="flex justify-end pt-2">
+            <button mat-flat-button color="primary">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANUAL MODE -->
+      <app-doctor-form *ngIf="mode === 'manual'" [form]="doctorForm"
+        ><div class="flex justify-end">
+          <button mat-flat-button color="primary">Save Doctor</button>
+        </div></app-doctor-form
+      >
+    </app-mode-switch-card>
+  </div>
+
+  <!-- tables -->
+  <div class="lg:col-span-3 space-y-6">
+    <!-- Main Doctors -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border">
+      <h2 class="text-lg font-semibold mb-4">Main Doctors</h2>
+
+      <!-- <app-doctors-table [data]="mainDoctors"></app-doctors-table> -->
+    </div>
+
+    <!-- Other Doctors -->
+    <div class="bg-white rounded-xl shadow-sm p-6 border">
+      <h2 class="text-lg font-semibold mb-4">Other Doctors</h2>
+
+      <!-- <app-doctors-table [data]="otherDoctors"></app-doctors-table> -->
+    </div>
+  </div>
+</div>

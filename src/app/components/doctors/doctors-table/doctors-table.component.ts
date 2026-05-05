@@ -15,12 +15,12 @@ import { MatButtonModule } from '@angular/material/button';
 export class DoctorsTableComponent {
   @Input() data!: DataSource<DoctorsList>;
   @Input() cols: string[] = [];
-  @Output() onEdit = new EventEmitter<Allergy>();
+  @Output() onEdit = new EventEmitter<DoctorsList>();
   @Output() onDelete = new EventEmitter();
   @Input() variant: 'main' | 'other' = 'main';
 
-  edit(allergy: Allergy) {
-    this.onEdit.emit(allergy);
+  edit(doctor: DoctorsList) {
+    this.onEdit.emit(doctor);
   }
 
   delete() {

@@ -1,9 +1,5 @@
-import { Component } from '@angular/core';
-import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
-import { InputModeEnum } from '../../core/constants';
 import { CommonModule } from '@angular/common';
-import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
-import { MatInputModule } from '@angular/material/input';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,14 +7,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Doctor, DoctorsList } from '../../core/interfaces/doctors';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { DoctorFormComponent } from '../../components/doctors/doctor-form/doctor-form.component';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { DoctorFormComponent } from '../../components/doctors/doctor-form/doctor-form.component';
 import { DoctorsTableComponent } from '../../components/doctors/doctors-table/doctors-table.component';
+import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
+import { InputModeEnum } from '../../core/constants';
+import { Doctor, DoctorsList } from '../../core/interfaces/doctors';
+import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
+import { ModalService } from '../../core/services/modal-service/modal.service';
 
 @Component({
   selector: 'app-doctors',
@@ -42,6 +44,7 @@ import { DoctorsTableComponent } from '../../components/doctors/doctors-table/do
 export class Doctors {
   mode: InputModeEnum = InputModeEnum.Search;
   doctorForm!: FormGroup;
+  editDoctorForm!: FormGroup;
 
   selectedDoctor: Doctor | null = null;
   selectedDoctorType: 'main' | 'other' = 'other';
@@ -50,6 +53,8 @@ export class Doctors {
   otherDoctors = new MatTableDataSource<DoctorsList>(OTHER_DOCTORS);
 
   columns = ['name', 'speciality', 'actions'];
+
+  @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
   doctorFields: { label: string; key: keyof Doctor }[] = [
     { label: 'Name', key: 'name' },
@@ -99,7 +104,11 @@ export class Doctors {
 
   allDoctors = [...this.searchResults];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private modal: ModalService,
+    private confirmService: ConfirmationModalService,
+  ) {
     this.doctorForm = this.fb.group({
       name: ['', Validators.required],
       service: ['', Validators.required],
@@ -108,7 +117,7 @@ export class Doctors {
       phone: ['', Validators.required],
       speciality: ['', Validators.required],
       gender: ['', Validators.required],
-      doctorType: [null, Validators.required],
+      doctorType: ['', Validators.required],
 
       // optional fields
       state: [''],
@@ -116,6 +125,11 @@ export class Doctors {
       npi: [''],
       credential: [''],
       salId: [''],
+    });
+    this.editDoctorForm = this.fb.group({
+      name: ['', Validators.required],
+      speciality: ['', Validators.required],
+      status: ['', Validators.required],
     });
   }
 
@@ -133,6 +147,12 @@ export class Doctors {
     this.selectedDoctor = mapped;
   }
 
+  addDoctor() {
+    this.doctorForm.markAllAsTouched();
+
+    if (this.doctorForm.invalid) return;
+  }
+
   searchDoctors(value: string) {
     const v = value.toLowerCase();
 
@@ -142,6 +162,28 @@ export class Doctors {
         d.speciality?.toLowerCase().includes(v) ||
         d.city?.toLowerCase().includes(v),
     );
+  }
+
+  openEditModal(doctor: DoctorsList) {
+    this.editDoctorForm.patchValue(doctor);
+    const ref = this.modal.open('Edit Doctor', this.editModalContent);
+    ref.componentInstance.save.subscribe(() => {
+      this.editDoctorForm.markAllAsTouched();
+
+      if (this.editDoctorForm.invalid) return;
+
+      ref.close();
+    });
+
+    ref.componentInstance.cancel.subscribe(() => {});
+  }
+
+  openDeleteModal() {
+    this.confirmService.open({
+      title: 'Delete Doctor',
+      description: 'Are you sure you want to delete this doctor?',
+      type: 'danger',
+    });
   }
 }
 

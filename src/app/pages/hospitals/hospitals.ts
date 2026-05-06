@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
+import { HospitalsTableComponent } from '../../components/hospitals/hospitals-table.component/hospitals-table.component';
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { SelectableListComponent } from '../../components/selectable-list/selectable-list.component';
 import { SelectedItemComponent } from '../../components/selected-item/selected-item.component';
 import { InputModeEnum } from '../../core/constants';
 import { Hospital, SelectedHospital } from '../../core/interfaces/hospital';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
-import { HospitalsTableComponent } from '../../components/hospitals/hospitals-table.component/hospitals-table.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
+import { ModalService } from '../../core/services/modal-service/modal.service';
 
 @Component({
   selector: 'app-hospitals',
@@ -84,7 +86,11 @@ export class Hospitals {
     { label: 'Other', value: 'other' },
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private modal: ModalService,
+    private confirmService: ConfirmationModalService,
+  ) {
     this.hospitalForm = this.fb.group({
       name: ['', Validators.required],
       service: ['', Validators.required],
@@ -96,6 +102,12 @@ export class Hospitals {
       salId: [''],
       email: [''],
     });
+    this.editHospitalForm = this.fb.group({
+      name: ['', Validators.required],
+      service: ['', Validators.required],
+      speciality: ['', Validators.required],
+      status: ['', Validators.required],
+    });
   }
 
   currentHospitals = new MatTableDataSource<Hospital>(CURRENT_HOSPITALS);
@@ -103,6 +115,9 @@ export class Hospitals {
   columns = ['name', 'service', 'speciality', 'actions'];
 
   allHospitals = [...this.searchResults];
+
+  @ViewChild('editModal') editModalContent!: TemplateRef<any>;
+  editHospitalForm!: FormGroup;
 
   searchHospital(value: string) {
     const v = value.toLowerCase();
@@ -116,90 +131,108 @@ export class Hospitals {
     this.selectedHospital = hospital;
   }
 
-  openEditModal(hospital: Hospital) {}
+  openEditModal(hospital: Hospital) {
+    this.editHospitalForm.patchValue(hospital);
+    const ref = this.modal.open('Edit Hospital', this.editModalContent);
+    ref.componentInstance.save.subscribe(() => {
+      this.editHospitalForm.markAllAsTouched();
 
-  openDeleteModal() {}
+      if (this.editHospitalForm.invalid) return;
+
+      ref.close();
+    });
+
+    ref.componentInstance.cancel.subscribe(() => {});
+  }
+
+  openDeleteModal() {
+    this.confirmService.open({
+      title: 'Delete Hospital',
+      description: 'Are you sure you want to delete this hospital?',
+      type: 'danger',
+    });
+  }
 }
 
 const CURRENT_HOSPITALS = [
   {
     name: 'City Care Hospital',
-    service: 'Emergency & Trauma',
+    service: 'emergency_trauma',
     speciality: 'Cardiology',
     status: 'active',
   },
   {
     name: 'Green Valley Medical Center',
-    service: 'General Medicine',
+    service: 'general_medicine',
     speciality: 'Internal Medicine',
     status: 'active',
   },
   {
     name: 'Sunrise Health Clinic',
-    service: 'Outpatient Services',
+    service: 'outpatient',
     speciality: 'General Medicine',
     status: 'active',
   },
   {
     name: 'Al-Shifa Medical Complex',
-    service: 'Maternity & Child Care',
+    service: 'maternity',
     speciality: 'Gynecology',
     status: 'active',
   },
   {
     name: 'Prime Health Center',
-    service: 'Physiotherapy',
+    service: 'physiotherapy',
     speciality: 'Rehabilitation',
     status: 'active',
   },
   {
     name: 'Prime Health Center',
-    service: 'Physiotherapy',
+    service: 'physiotherapy',
     speciality: 'Rehabilitation',
     status: 'active',
   },
   {
     name: 'Prime Health Center',
-    service: 'Physiotherapy',
+    service: 'physiotherapy',
     speciality: 'Rehabilitation',
     status: 'active',
   },
 ];
 
-export const PAST_HOSPITALS = [
+const PAST_HOSPITALS = [
   {
     name: 'National Hospital',
-    service: 'Multi-Specialty',
+    service: 'general_medicine',
     speciality: 'Neurology',
     status: 'inactive',
   },
   {
     name: 'LifeCare Hospital',
-    service: 'Surgery & ICU',
+    service: 'surgery',
     speciality: 'Orthopedics',
     status: 'inactive',
   },
   {
     name: 'Medicare Hospital',
-    service: 'Radiology & Imaging',
+    service: 'radiology',
     speciality: 'Diagnostics',
     status: 'inactive',
   },
   {
     name: 'CareWell Hospital',
-    service: 'Oncology',
+    service: 'oncology',
     speciality: 'Cancer Care',
     status: 'inactive',
   },
   {
     name: 'CareWell Hospital',
-    service: 'Oncology',
+    service: 'oncology',
     speciality: 'Cancer Care',
     status: 'inactive',
   },
   {
     name: 'CareWell Hospital',
-    service: 'Oncology',
+    service: 'oncology',
     speciality: 'Cancer Care',
     status: 'inactive',
   },

@@ -3,10 +3,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Hospital } from '../../../core/interfaces/hospital';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-hospitals-table',
-  imports: [MatTableModule, MatIconModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './hospitals-table.component.html',
   styleUrl: './hospitals-table.component.css',
 })

@@ -179,4 +179,79 @@
       (onDelete)="openDeleteModal()"
     ></app-hospitals-table>
   </div>
+
+  <ng-template #editModal>
+    <form [formGroup]="editHospitalForm" class="space-y-4">
+      <!-- Name -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <small
+          *ngIf="editHospitalForm.get('name')?.invalid && editHospitalForm.get('name')?.touched"
+          class="error-text pt-1 block"
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Service -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Service Provided</mat-label>
+          <mat-select formControlName="service">
+            <mat-option *ngFor="let service of services" [value]="service.value">
+              {{ service.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <small
+          *ngIf="
+            editHospitalForm.get('service')?.invalid && editHospitalForm.get('service')?.touched
+          "
+          class="error-text pt-1 block"
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Speciality -->
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Speciality</mat-label>
+          <input matInput formControlName="speciality" />
+        </mat-form-field>
+        <small
+          *ngIf="
+            editHospitalForm.get('speciality')?.invalid &&
+            editHospitalForm.get('speciality')?.touched
+          "
+          class="error-text pt-1 block"
+        >
+          This field is required
+        </small>
+      </div>
+
+      <!-- Status -->
+      <div class="flex flex-col">
+        <mat-label class="text-sm font-medium text-gray-700 mb-2">Assign Hospital Type</mat-label>
+
+        <mat-radio-group formControlName="status" class="flex gap-4">
+          <mat-radio-button value="active">Current Hospital</mat-radio-button>
+          <mat-radio-button value="inactive">Past Hospital</mat-radio-button>
+        </mat-radio-group>
+
+        <small
+          *ngIf="editHospitalForm.get('status')?.invalid && editHospitalForm.get('status')?.touched"
+          class="error-text pt-1 block"
+        >
+          This field is required
+        </small>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #deleteModal></ng-template>
 </div>

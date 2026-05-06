@@ -1,1 +1,211 @@
-<p>lifestyle works!</p>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+  <!-- LEFT: DISPLAY CARDS -->
+  <div class="lg:col-span-3 space-y-6">
+    <!-- Lifestyle -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Lifestyle Information</h2>
+        <button mat-stroked-button (click)="editSection('lifestyle')">Edit</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-gray-500">Religion</p>
+          <p class="font-medium">{{ lifestyleData.religion || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Place of Worship</p>
+          <p class="font-medium">{{ lifestyleData.worship || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Worship Name</p>
+          <p class="font-medium">{{ lifestyleData.worshipName || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Address</p>
+          <p class="font-medium">{{ lifestyleData.worshipAddress || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Work & Home</h2>
+        <button mat-stroked-button (click)="editSection('work')">Edit</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-gray-500">Marital Status</p>
+          <p class="font-medium">{{ lifestyleData.maritalStatus || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Work Status</p>
+          <p class="font-medium">{{ lifestyleData.workStatus || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Education</p>
+          <p class="font-medium">{{ lifestyleData.education || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Occupation</p>
+          <p class="font-medium">{{ lifestyleData.occupation || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exercise -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Exercise & Diet</h2>
+        <button mat-stroked-button (click)="editSection('exercise')">Edit</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-gray-500">Dietary Routine</p>
+          <p class="font-medium">{{ lifestyleData.diet || 'N/A' }}</p>
+        </div>
+
+        <div>
+          <p class="text-gray-500">Exercise Frequency</p>
+          <p class="font-medium">{{ lifestyleData.exercise || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: EDIT FORM -->
+
+  <div class="lg:col-span-2">
+    <div class="bg-white rounded-xl shadow-sm p-6 space-y-4">
+      <h2 class="text-lg font-semibold">Edit Lifestyle</h2>
+      <p class="text-sm text-gray-500">Select a section to edit</p>
+
+      <!-- FORM -->
+      <form *ngIf="activeSection" [formGroup]="lifestyleForm" class="space-y-4">
+        <div class="space-y-4">
+          <!-- LIFESTYLE -->
+          <ng-container *ngIf="activeSection === 'lifestyle'">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Religion</mat-label>
+              <mat-select formControlName="religion">
+                <mat-option *ngFor="let religion of religionOptions" [value]="religion.value">{{
+                  religion.label
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Place of Worship</mat-label>
+              <mat-select formControlName="worship">
+                <mat-option *ngFor="let place of placeOfWorshipOptions" [value]="place.value">{{
+                  place.label
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Worship Name</mat-label>
+              <input matInput formControlName="worshipName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="worshipAddress" />
+            </mat-form-field>
+          </ng-container>
+
+          <!-- WORK -->
+          <ng-container *ngIf="activeSection === 'work'">
+            <div class="space-y-4">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Marital Status</mat-label>
+                <mat-select formControlName="maritalStatus">
+                  <mat-option *ngFor="let status of maritalStatusOptions" [value]="status.value">{{
+                    status.label
+                  }}</mat-option></mat-select
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Work Status</mat-label>
+                <mat-select formControlName="workStatus">
+                  <mat-option *ngFor="let status of workStatusOptions" [value]="status.value">
+                    {{ status.label }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Education</mat-label>
+                <mat-select formControlName="education">
+                  <mat-option
+                    *ngFor="let education of educationOptions"
+                    [value]="education.value"
+                    >{{ education.label }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Occupation</mat-label>
+                <mat-select formControlName="occupation">
+                  <mat-option
+                    *ngFor="let occupation of occupationOptions"
+                    [value]="occupation.value"
+                  >
+                    {{ occupation.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </ng-container>
+
+          <!-- EXERCISE -->
+          <ng-container *ngIf="activeSection === 'exercise'">
+            <div class="space-y-4">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Dietary Routine</mat-label>
+                <mat-select formControlName="diet">
+                  <mat-option *ngFor="let routine of dietaryRoutineOptions" [value]="routine.value">
+                    {{ routine.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Exercise Frequency</mat-label>
+                <mat-select formControlName="exercise">
+                  <mat-option
+                    *ngFor="let exercise of exerciseFrequencyOptions"
+                    [value]="exercise.value"
+                  >
+                    {{ exercise.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- ACTION -->
+        <div class="flex justify-end">
+          <button mat-flat-button color="primary" (click)="saveSection()">Save</button>
+        </div>
+      </form>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="!activeSection" class="text-sm text-gray-400">
+        Select a section from the right to edit
+      </div>
+    </div>
+  </div>
+</div>

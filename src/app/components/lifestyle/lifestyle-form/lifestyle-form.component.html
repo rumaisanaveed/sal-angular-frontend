@@ -1,0 +1,103 @@
+<form *ngIf="activeSection" [formGroup]="form" class="space-y-4">
+  <div class="space-y-4">
+    <!-- LIFESTYLE -->
+    <ng-container *ngIf="activeSection === 'lifestyle'">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Religion</mat-label>
+        <mat-select formControlName="religion">
+          <mat-option *ngFor="let religion of religionOptions" [value]="religion.value">{{
+            religion.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Place of Worship</mat-label>
+        <mat-select formControlName="worship">
+          <mat-option *ngFor="let place of placeOfWorshipOptions" [value]="place.value">{{
+            place.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Worship Name</mat-label>
+        <input matInput formControlName="worshipName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="worshipAddress" />
+      </mat-form-field>
+    </ng-container>
+
+    <!-- WORK -->
+    <ng-container *ngIf="activeSection === 'work'">
+      <div class="space-y-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Marital Status</mat-label>
+          <mat-select formControlName="maritalStatus">
+            <mat-option *ngFor="let status of maritalStatusOptions" [value]="status.value">{{
+              status.label
+            }}</mat-option></mat-select
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Work Status</mat-label>
+          <mat-select formControlName="workStatus">
+            <mat-option *ngFor="let status of workStatusOptions" [value]="status.value">
+              {{ status.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Education</mat-label>
+          <mat-select formControlName="education">
+            <mat-option *ngFor="let education of educationOptions" [value]="education.value">{{
+              education.label
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Occupation</mat-label>
+          <mat-select formControlName="occupation">
+            <mat-option *ngFor="let occupation of occupationOptions" [value]="occupation.value">
+              {{ occupation.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <!-- EXERCISE -->
+    <ng-container *ngIf="activeSection === 'exercise'">
+      <div class="space-y-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Dietary Routine</mat-label>
+          <mat-select formControlName="diet">
+            <mat-option *ngFor="let routine of dietaryRoutineOptions" [value]="routine.value">
+              {{ routine.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Exercise Frequency</mat-label>
+          <mat-select formControlName="exercise">
+            <mat-option *ngFor="let exercise of exerciseFrequencyOptions" [value]="exercise.value">
+              {{ exercise.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ACTION -->
+  <div class="flex justify-end">
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  </div>
+</form>

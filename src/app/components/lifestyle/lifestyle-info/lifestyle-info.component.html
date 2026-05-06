@@ -1,0 +1,78 @@
+<div class="bg-white rounded-xl shadow-sm p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Lifestyle Information</h2>
+    <button mat-stroked-button (click)="editSection(SectionEnum.Lifestyle)">Edit</button>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <p class="text-gray-500">Religion</p>
+      <p class="font-medium">{{ data.religion || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Place of Worship</p>
+      <p class="font-medium">{{ data.worship || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Worship Name</p>
+      <p class="font-medium">{{ data.worshipName || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Address</p>
+      <p class="font-medium">{{ data.worshipAddress || 'N/A' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Work -->
+<div class="bg-white rounded-xl shadow-sm p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Work & Home</h2>
+    <button mat-stroked-button (click)="editSection(SectionEnum.Work)">Edit</button>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <p class="text-gray-500">Marital Status</p>
+      <p class="font-medium">{{ data.maritalStatus || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Work Status</p>
+      <p class="font-medium">{{ data.workStatus || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Education</p>
+      <p class="font-medium">{{ data.education || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Occupation</p>
+      <p class="font-medium">{{ data.occupation || 'N/A' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Exercise -->
+<div class="bg-white rounded-xl shadow-sm p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Exercise & Diet</h2>
+    <button mat-stroked-button (click)="editSection(SectionEnum.Exercise)">Edit</button>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <p class="text-gray-500">Dietary Routine</p>
+      <p class="font-medium">{{ data.diet || 'N/A' }}</p>
+    </div>
+
+    <div>
+      <p class="text-gray-500">Exercise Frequency</p>
+      <p class="font-medium">{{ data.exercise || 'N/A' }}</p>
+    </div>
+  </div>
+</div>

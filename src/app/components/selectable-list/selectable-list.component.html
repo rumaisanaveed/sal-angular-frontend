@@ -1,4 +1,4 @@
-<div class="bg-white max-h-44 overflow-auto flex flex-col gap-2">
+<div class="bg-white max-h-44 overflow-auto flex flex-col gap-2" [ngClass]="classes">
   <div
     *ngFor="let item of items"
     (click)="select(item)"

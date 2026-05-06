@@ -1,10 +1,9 @@
 import { DataSource } from '@angular/cdk/table';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { Allergy } from '../../../core/interfaces/allergies';
 import { DoctorsList } from '../../../core/interfaces/doctors';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-doctors-table',

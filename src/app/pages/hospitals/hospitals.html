@@ -1,1 +1,182 @@
-<p>hospitals works!</p>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+  <div class="lg:col-span-2 space-y-6">
+    <app-mode-switch-card
+      [(mode)]="mode"
+      title="Add Hospital"
+      subtitle="Search or manually add hospital"
+    >
+      <!-- Search Mode -->
+      <div *ngIf="mode === 'search'" class="flex flex-col gap-6 max-h-[450px] overflow-y-auto">
+        <app-search-bar class="w-full" (search)="searchHospital($event)" />
+
+        <app-selectable-list
+          [items]="searchResults"
+          labelKey="name"
+          subLabelKey="speciality"
+          (onSelect)="selectHospital($event)"
+          classes="max-h-[218px]"
+        />
+
+        @if (selectedHospital) {
+          <app-selected-item
+            [item]="{
+              title: selectedHospital.name || '',
+              subtitle: selectedHospital.speciality || '',
+            }"
+          />
+        }
+      </div>
+
+      <!-- Manual Mode -->
+      <form *ngIf="mode === 'manual'" class="space-y-4" [formGroup]="hospitalForm">
+        <div class="space-y-4 overflow-y-auto max-h-[225px]">
+          <!-- Name -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+
+            <small
+              *ngIf="hospitalForm.get('name')?.invalid && hospitalForm.get('name')?.touched"
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- Service -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Service Provided</mat-label>
+              <mat-select formControlName="service">
+                <mat-option *ngFor="let service of services" [value]="service.value">
+                  {{ service.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <small
+              *ngIf="hospitalForm.get('service')?.invalid && hospitalForm.get('service')?.touched"
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- Address -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" />
+            </mat-form-field>
+
+            <small
+              *ngIf="hospitalForm.get('address')?.invalid && hospitalForm.get('address')?.touched"
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- Phone No -->
+          <div class="w-full">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Phone</mat-label>
+              <input matInput formControlName="phone" type="number" />
+            </mat-form-field>
+            <small
+              *ngIf="hospitalForm.get('phone')?.invalid && hospitalForm.get('phone')?.touched"
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- Speciality -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Speciality</mat-label>
+              <input matInput formControlName="speciality" />
+            </mat-form-field>
+            <small
+              *ngIf="
+                hospitalForm.get('speciality')?.invalid && hospitalForm.get('speciality')?.touched
+              "
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- NPI Num -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>NPI Number</mat-label>
+            <input matInput type="number" formControlName="npi" />
+          </mat-form-field>
+
+          <!-- Sal id -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Sal Id</mat-label>
+            <input matInput type="number" formControlName="salId" />
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+
+          <!-- Status -->
+          <div class="flex flex-col">
+            <mat-label class="text-sm font-medium text-gray-700 mb-2"
+              >Assign Hospital Type</mat-label
+            >
+
+            <mat-radio-group formControlName="status" class="flex gap-4">
+              <mat-radio-button value="active">Current Hospital</mat-radio-button>
+              <mat-radio-button value="inactive">Past Hospital</mat-radio-button>
+            </mat-radio-group>
+
+            <small
+              *ngIf="hospitalForm.get('status')?.invalid && hospitalForm.get('status')?.touched"
+              class="error-text pt-1 block"
+            >
+              This field is required
+            </small>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button mat-flat-button type="submit" color="primary">Save Hospital</button>
+        </div>
+      </form>
+    </app-mode-switch-card>
+  </div>
+
+  <div class="lg:col-span-3 space-y-6">
+    <!-- Current Hospitals -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-semibold mb-4">Main Doctors</h2>
+
+      <app-hospitals-table
+        [data]="currentHospitals"
+        [cols]="columns"
+        (onEdit)="openEditModal($event)"
+        (onDelete)="openDeleteModal()"
+      ></app-hospitals-table>
+    </div>
+  </div>
+
+  <!-- Past Hospitals -->
+  <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-5">
+    <h2 class="text-lg font-semibold mb-4">Other Doctors</h2>
+
+    <app-hospitals-table
+      class="w-full"
+      [data]="pastHospitals"
+      [cols]="columns"
+      (onEdit)="openEditModal($event)"
+      (onDelete)="openDeleteModal()"
+    ></app-hospitals-table>
+  </div>
+</div>

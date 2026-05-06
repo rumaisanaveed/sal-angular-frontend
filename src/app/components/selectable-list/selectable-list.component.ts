@@ -9,21 +9,13 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 })
 export class SelectableListComponent<T extends Record<string, any>> {
   @Input() items: T[] = [];
-
   @Input() labelKey!: keyof T;
   @Input() subLabelKey?: keyof T;
+  @Input() classes?: string = '';
 
   @Output() onSelect = new EventEmitter<T>();
+
   select(item: T) {
     this.onSelect.emit(item);
   }
-
-  // getLabel(item: T): string {
-  //   return String(item[this.labelKey] ?? '');
-  // }
-
-  // getSubLabel(item: T): string {
-  //   if (!this.subLabelKey) return '';
-  //   return String(item[this.subLabelKey] ?? '');
-  // }
 }

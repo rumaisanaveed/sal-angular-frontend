@@ -1,1 +1,37 @@
-<p>settings works!</p>
+<div class="p-4 md:p-6 bg-gray-50 min-h-screen">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Settings</h1>
+
+    <p class="text-sm text-gray-500 mt-1">
+      Manage your account preferences and contact information
+    </p>
+  </div>
+
+  <!-- SETTINGS CARD -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <!-- TABS -->
+    <mat-tab-group mat-stretch-tabs="false" animationDuration="200ms" class="settings-tabs">
+      <!-- PROFILE TAB -->
+      <mat-tab label="Profile">
+        <app-profile-tab />
+      </mat-tab>
+
+      <!-- ACCOUNT TAB -->
+      <mat-tab label="Account">
+        <app-account-tab />
+      </mat-tab>
+
+      <!-- CONTACT TAB -->
+      <mat-tab label="Contact Info">
+        <app-contact-info-tab />
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- ACTION BAR -->
+    <div class="border-t border-gray-100 bg-gray-50 px-6 py-4 flex justify-end gap-3">
+      <button mat-stroked-button color="primary">Cancel</button>
+
+      <button mat-flat-button color="primary">Save Changes</button>
+    </div>
+  </div>
+</div>

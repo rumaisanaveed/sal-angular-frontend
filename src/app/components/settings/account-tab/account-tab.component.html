@@ -1,0 +1,67 @@
+<div class="p-6">
+  <!-- PROFILE CARD -->
+  <div class="border border-gray-100 rounded-xl p-6 bg-white shadow-sm">
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-900">Account Information</h2>
+
+      <p class="text-sm text-gray-500 mt-1">Update your personal account details</p>
+    </div>
+
+    <form class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- FULL NAME -->
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+
+          <input matInput placeholder="John Doe" />
+        </mat-form-field>
+
+        <!-- EMAIL -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+
+          <input matInput [disabled]="true" type="email" placeholder="john@example.com" />
+        </mat-form-field>
+
+        <!-- SSN -->
+        <mat-form-field appearance="outline">
+          <mat-label>SSN</mat-label>
+
+          <input matInput type="number" />
+        </mat-form-field>
+
+        <!-- Member Id -->
+        <mat-form-field appearance="outline">
+          <mat-label>Member Id</mat-label>
+
+          <input matInput type="text" [disabled]="true" />
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <!-- SECURITY CARD -->
+  <div class="border border-gray-100 rounded-xl p-6 bg-white shadow-sm mt-6">
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-900">Security</h2>
+
+      <p class="text-sm text-gray-500 mt-1">Manage your password and account security</p>
+    </div>
+
+    <form class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Current Password</mat-label>
+
+          <input matInput type="password" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New Password</mat-label>
+
+          <input matInput type="password" />
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</div>

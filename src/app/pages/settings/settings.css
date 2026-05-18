@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+::ng-deep .settings-tabs .mat-mdc-tab-header {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+::ng-deep .settings-tabs .mdc-tab {
+  min-width: 140px;
+}
+
+::ng-deep .settings-tabs .mdc-tab__text-label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+::ng-deep .settings-tabs .mdc-tab-indicator__content--underline {
+  border-color: #4f46e5 !important;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-slide-toggle {
+  font-size: 14px;
+}

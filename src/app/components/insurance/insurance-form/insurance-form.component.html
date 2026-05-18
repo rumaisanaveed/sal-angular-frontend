@@ -1,0 +1,37 @@
+<form [formGroup]="form" class="space-y-4">
+  <div
+    class="grid gap-4"
+    [ngClass]="showState ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'"
+  >
+    <!-- Insurance -->
+    <mat-form-field appearance="outline">
+      <mat-label>{{ label }}</mat-label>
+
+      <mat-select [formControlName]="insuranceControl">
+        <mat-option *ngFor="let insurance of providers" [value]="insurance.value">
+          {{ insurance.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- State -->
+    <mat-form-field *ngIf="showState" appearance="outline">
+      <mat-label>State</mat-label>
+
+      <input matInput [formControlName]="stateControl!" />
+    </mat-form-field>
+
+    <!-- Member ID -->
+    <mat-form-field appearance="outline">
+      <mat-label>Member ID</mat-label>
+
+      <input matInput [formControlName]="memberIdControl" />
+    </mat-form-field>
+  </div>
+
+  <div class="flex justify-end gap-3">
+    <button mat-stroked-button type="button" (click)="cancel.emit()">Cancel</button>
+
+    <button mat-flat-button color="primary" type="button" (click)="save.emit()">Save</button>
+  </div>
+</form>

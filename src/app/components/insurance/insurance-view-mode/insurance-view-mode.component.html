@@ -1,0 +1,25 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="bg-gray-50 rounded-lg p-4">
+    <p class="text-xs text-gray-500 mb-1">Insurance Provider</p>
+
+    <p class="text-sm font-medium text-gray-900">
+      {{ data.provider || '-' }}
+    </p>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4" *ngIf="data.showState">
+    <p class="text-xs text-gray-500 mb-1">State</p>
+
+    <p class="text-sm font-medium text-gray-900">
+      {{ data.state || '-' }}
+    </p>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4">
+    <p class="text-xs text-gray-500 mb-1">Member ID</p>
+
+    <p class="text-sm font-medium text-gray-900 break-all">
+      {{ data.memberId || '-' }}
+    </p>
+  </div>
+</div>

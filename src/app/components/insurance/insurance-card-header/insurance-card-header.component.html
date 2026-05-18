@@ -1,0 +1,13 @@
+<div class="flex items-start justify-between mb-5">
+  <div>
+    <div class="flex items-center gap-2">
+      <h2 class="text-base font-semibold text-gray-900">{{ title }}</h2>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-1">{{ subtitle }}</p>
+  </div>
+
+  <button mat-icon-button type="button" *ngIf="!isEditing" (click)="onEdit()">
+    <mat-icon>edit</mat-icon>
+  </button>
+</div>

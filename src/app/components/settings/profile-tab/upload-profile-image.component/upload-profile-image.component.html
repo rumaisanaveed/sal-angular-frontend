@@ -1,0 +1,30 @@
+<div class="flex items-start gap-4">
+  <!-- PREVIEW -->
+  <div
+    class="w-32 h-32 rounded-2xl border-2 border-indigo-500 overflow-hidden bg-indigo-50 flex items-center justify-center"
+  >
+    <img *ngIf="imageUrl" [src]="imageUrl" class="w-full h-full object-cover" />
+
+    <mat-icon *ngIf="!imageUrl" class="text-5xl text-indigo-400"> person </mat-icon>
+  </div>
+
+  <!-- UPLOAD IMAGE -->
+  <div class="pt-2">
+    <input
+      #profileInput
+      type="file"
+      hidden
+      accept=".png,.jpg,.jpeg,.webp"
+      (change)="handleProfileChange($event)"
+      class="cursor-pointer"
+    />
+
+    <button type="button" mat-stroked-button color="primary" (click)="profileInput.click()">
+      {{ imageUrl ? 'Change Photo' : 'Upload Photo' }}
+    </button>
+
+    <p class="text-sm text-gray-500 mt-3 max-w-[220px]">
+      Only JPEG, PNG, GIF and WebP images are allowed
+    </p>
+  </div>
+</div>

@@ -5,35 +5,10 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
       <!-- PROFILE IMAGE -->
-      <div class="flex items-start gap-4">
-        <!-- PREVIEW -->
-        <div
-          class="w-32 h-32 rounded-2xl border-2 border-indigo-500 overflow-hidden bg-indigo-50 flex items-center justify-center"
-        >
-          <img *ngIf="profilePreview" [src]="profilePreview" class="w-full h-full object-cover" />
-
-          <mat-icon *ngIf="!profilePreview" class="text-5xl text-indigo-400"> person </mat-icon>
-        </div>
-
-        <!-- UPLOAD IMAGE -->
-        <div class="pt-2">
-          <input
-            #profileInput
-            type="file"
-            hidden
-            accept=".png,.jpg,.jpeg,.webp"
-            (change)="onProfileSelected($event)"
-          />
-
-          <button type="button" mat-stroked-button color="primary" (click)="profileInput.click()">
-            Upload Photo
-          </button>
-
-          <p class="text-sm text-gray-500 mt-3 max-w-[220px]">
-            Only JPEG, PNG, GIF and WebP images are allowed
-          </p>
-        </div>
-      </div>
+      <app-upload-profile-image
+        [imageUrl]="profilePreview"
+        (onProfileChange)="handleProfileUpload($event)"
+      />
 
       <!-- DATE OF BIRTH -->
       <mat-form-field appearance="outline" class="w-full h-fit">
@@ -155,58 +130,13 @@
 
       <!-- EKG -->
       <div class="lg:col-span-2">
-        <label class="text-sm font-medium text-gray-600 mb-3 block"> EKG Image </label>
-
-        <input #ekgInput type="file" hidden accept="image/*" (change)="onEkgSelected($event)" />
-
-        <!-- UPLOAD AREA -->
-        <div
-          class="border-2 border-dashed border-indigo-200 rounded-2xl bg-indigo-50/40 p-6 transition hover:border-indigo-400 w-full md:w-fit"
-        >
-          <!-- PREVIEW -->
-          <div
-            *ngIf="ekgPreview"
-            class="relative rounded-xl overflow-hidden border border-gray-200 bg-white"
-          >
-            <img
-              [src]="ekgPreview"
-              alt="EKG Preview"
-              class="w-full max-h-[300px] object-contain bg-white"
-            />
-
-            <!-- CHANGE IMAGE BUTTON -->
-            <button
-              type="button"
-              mat-mini-fab
-              color="primary"
-              class="absolute! top-3 right-3"
-              (click)="ekgInput.click()"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-          </div>
-
-          <!-- EMPTY STATE -->
-          <div
-            *ngIf="!ekgPreview"
-            class="flex flex-col items-center justify-center text-center py-6"
-          >
-            <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-              <mat-icon class="text-indigo-600 text-3xl"> monitoring </mat-icon>
-            </div>
-
-            <h3 class="text-base font-semibold text-gray-800">Upload EKG Image</h3>
-
-            <p class="text-sm text-gray-500 mt-1 mb-5 max-w-md">
-              Upload clear EKG or ECG scan image in PNG, JPG or WEBP format.
-            </p>
-
-            <button type="button" mat-flat-button color="primary" (click)="ekgInput.click()">
-              <mat-icon>upload</mat-icon>
-              Choose File
-            </button>
-          </div>
-        </div>
+        <app-image-upload
+          label="EKG Image"
+          [preview]="ekgPreview"
+          placeholderTitle="Upload EKG Image"
+          placeholderDescription="Upload clear EKG or ECG scan image in PNG, JPG or WEBP format."
+          (fileSelected)="handleEkgUpload($event)"
+        ></app-image-upload>
       </div>
     </div>
   </div>

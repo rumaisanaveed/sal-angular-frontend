@@ -9,6 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { EmergencyContactsComponent } from '../emergency-contacts/emergency-contacts.component';
+import { UploadProfileImageComponent } from '../upload-profile-image.component/upload-profile-image.component';
+import { ImageUploadComponent } from '../../../image-upload.component/image-upload.component';
 
 @Component({
   selector: 'app-profile-tab',
@@ -23,6 +25,8 @@ import { EmergencyContactsComponent } from '../emergency-contacts/emergency-cont
     MatFormFieldModule,
     MatButtonModule,
     EmergencyContactsComponent,
+    UploadProfileImageComponent,
+    ImageUploadComponent,
   ],
   templateUrl: './profile-tab.component.html',
   styleUrl: './profile-tab.component.css',
@@ -104,11 +108,7 @@ export class ProfileTabComponent {
     }
   }
 
-  onProfileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-
-    if (!file) return;
-
+  handleProfileUpload(file: File): void {
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -118,11 +118,7 @@ export class ProfileTabComponent {
     reader.readAsDataURL(file);
   }
 
-  onEkgSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-
-    if (!file) return;
-
+  handleEkgUpload(file: File): void {
     const reader = new FileReader();
 
     reader.onload = () => {

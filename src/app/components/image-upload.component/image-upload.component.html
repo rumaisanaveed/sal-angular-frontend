@@ -1,0 +1,51 @@
+<div>
+  <label class="text-sm font-medium text-gray-600 mb-3 block">
+    {{ label }}
+  </label>
+
+  <input #fileInput type="file" hidden accept="image/*" (change)="onFileSelected($event)" />
+
+  <!-- UPLOAD AREA -->
+  <div
+    class="border-2 border-dashed border-indigo-200 rounded-2xl bg-indigo-50/40 p-6 transition hover:border-indigo-400 w-full md:w-fit"
+  >
+    <!-- PREVIEW -->
+    <div
+      *ngIf="preview"
+      class="relative rounded-xl overflow-hidden border border-gray-200 bg-white"
+    >
+      <img [src]="preview" class="w-full max-h-[300px] object-contain bg-white" />
+
+      <!-- EDIT BUTTON -->
+      <button
+        type="button"
+        mat-mini-fab
+        color="primary"
+        class="!absolute top-3 right-3"
+        (click)="fileInput.click()"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div *ngIf="!preview" class="flex flex-col items-center justify-center text-center py-6">
+      <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+        <mat-icon class="text-indigo-600 text-3xl"> upload </mat-icon>
+      </div>
+
+      <h3 class="text-base font-semibold text-gray-800">
+        {{ placeholderTitle }}
+      </h3>
+
+      <p class="text-sm text-gray-500 mt-1 mb-5 max-w-md">
+        {{ placeholderDescription }}
+      </p>
+
+      <button type="button" mat-flat-button color="primary" (click)="fileInput.click()">
+        <mat-icon>upload</mat-icon>
+        Choose File
+      </button>
+    </div>
+  </div>
+</div>

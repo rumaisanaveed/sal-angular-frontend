@@ -1,0 +1,62 @@
+<div class="mt-12" [formGroup]="formGroup">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-2xl font-bold text-indigo-700">Emergency Contact</h2>
+
+      <div
+        class="inline-flex items-center bg-red-50 text-red-500 text-xs px-3 py-1 rounded-full mt-3"
+      >
+        Displayed on Card
+      </div>
+    </div>
+
+    <button type="button" mat-mini-fab color="primary" (click)="addContact()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div formArrayName="emergencyContacts">
+    <div
+      *ngFor="let contact of contacts.controls; let i = index"
+      [formGroupName]="i"
+      class="border border-gray-200 rounded-2xl p-5 mb-5 bg-gray-50"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- CONTACT NAME -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Contact Name</mat-label>
+
+          <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <!-- CONTACT PHONE -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Contact Phone</mat-label>
+
+          <input matInput formControlName="phone" />
+        </mat-form-field>
+
+        <!-- RELATION -->
+        <div class="flex gap-3 items-start">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Relation</mat-label>
+
+            <input matInput formControlName="relation" />
+          </mat-form-field>
+
+          <!-- REMOVE BUTTON -->
+          <button
+            *ngIf="contacts.length > 1"
+            type="button"
+            mat-icon-button
+            color="warn"
+            class="mt-2"
+            (click)="removeContact(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

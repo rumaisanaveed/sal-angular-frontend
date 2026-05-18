@@ -1,0 +1,221 @@
+<form [formGroup]="profileForm" class="p-6">
+  <!-- PROFILE DATA -->
+  <div>
+    <h2 class="text-2xl font-bold text-indigo-700 mb-8">Profile Data</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
+      <!-- PROFILE IMAGE -->
+      <div class="flex items-start gap-4">
+        <!-- PREVIEW -->
+        <div
+          class="w-32 h-32 rounded-2xl border-2 border-indigo-500 overflow-hidden bg-indigo-50 flex items-center justify-center"
+        >
+          <img *ngIf="profilePreview" [src]="profilePreview" class="w-full h-full object-cover" />
+
+          <mat-icon *ngIf="!profilePreview" class="text-5xl text-indigo-400"> person </mat-icon>
+        </div>
+
+        <!-- UPLOAD IMAGE -->
+        <div class="pt-2">
+          <input
+            #profileInput
+            type="file"
+            hidden
+            accept=".png,.jpg,.jpeg,.webp"
+            (change)="onProfileSelected($event)"
+          />
+
+          <button type="button" mat-stroked-button color="primary" (click)="profileInput.click()">
+            Upload Photo
+          </button>
+
+          <p class="text-sm text-gray-500 mt-3 max-w-[220px]">
+            Only JPEG, PNG, GIF and WebP images are allowed
+          </p>
+        </div>
+      </div>
+
+      <!-- DATE OF BIRTH -->
+      <mat-form-field appearance="outline" class="w-full h-fit">
+        <mat-label>Date of Birth</mat-label>
+
+        <input matInput [matDatepicker]="picker" formControlName="dob" />
+
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <small *ngIf="profileForm.get('dob')?.errors?.['dob']" class="error-text">
+        Date of birth is required.
+      </small>
+
+      <!-- HEIGHT -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Height (inches)</mat-label>
+
+        <input matInput type="number" formControlName="height" />
+      </mat-form-field>
+
+      <small *ngIf="profileForm.get('height')?.errors?.['height']" class="error-text">
+        Height is required.
+      </small>
+
+      <!-- WEIGHT -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Weight (pounds)</mat-label>
+
+        <input matInput type="number" formControlName="weight" />
+      </mat-form-field>
+
+      <small *ngIf="profileForm.get('weight')?.errors?.['weight']" class="error-text">
+        Weight is required.
+      </small>
+
+      <!-- GENDER -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Gender</mat-label>
+
+        <mat-select formControlName="gender">
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <small *ngIf="profileForm.get('gender')?.errors?.['gender']" class="error-text">
+        Gender is required.
+      </small>
+
+      <!-- BLOOD TYPE -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Blood Type</mat-label>
+
+        <mat-select formControlName="bloodType">
+          <mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType.value">{{
+            bloodType.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <small *ngIf="profileForm.get('bloodType')?.errors?.['bloodType']" class="error-text">
+        Blood type is required.
+      </small>
+
+      <!-- COUNTRY -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Country of Birth</mat-label>
+
+        <mat-select formControlName="countryOfBirth">
+          <mat-option *ngFor="let country of countries" [value]="country.value">{{
+            country.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <small
+        *ngIf="profileForm.get('countryOfBirth')?.errors?.['countryOfBirth']"
+        class="error-text"
+      >
+        Country of birth is required.
+      </small>
+
+      <!-- ORGAN DONOR -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Organ Donor</mat-label>
+
+        <mat-select formControlName="organDonor">
+          <mat-option *ngFor="let option of yesNoOptions" [value]="option.value">{{
+            option.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- NATIONALITY -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nationality</mat-label>
+
+        <mat-select formControlName="nationality">
+          <mat-option *ngFor="let country of countries" [value]="country.value">{{
+            country.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- SMOKER -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Smoker</mat-label>
+
+        <mat-select formControlName="smoker">
+          <mat-option *ngFor="let option of yesNoOptions" [value]="option.value">{{
+            option.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- EKG -->
+      <div class="lg:col-span-2">
+        <label class="text-sm font-medium text-gray-600 mb-3 block"> EKG Image </label>
+
+        <input #ekgInput type="file" hidden accept="image/*" (change)="onEkgSelected($event)" />
+
+        <!-- UPLOAD AREA -->
+        <div
+          class="border-2 border-dashed border-indigo-200 rounded-2xl bg-indigo-50/40 p-6 transition hover:border-indigo-400 w-full md:w-fit"
+        >
+          <!-- PREVIEW -->
+          <div
+            *ngIf="ekgPreview"
+            class="relative rounded-xl overflow-hidden border border-gray-200 bg-white"
+          >
+            <img
+              [src]="ekgPreview"
+              alt="EKG Preview"
+              class="w-full max-h-[300px] object-contain bg-white"
+            />
+
+            <!-- CHANGE IMAGE BUTTON -->
+            <button
+              type="button"
+              mat-mini-fab
+              color="primary"
+              class="absolute! top-3 right-3"
+              (click)="ekgInput.click()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+
+          <!-- EMPTY STATE -->
+          <div
+            *ngIf="!ekgPreview"
+            class="flex flex-col items-center justify-center text-center py-6"
+          >
+            <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+              <mat-icon class="text-indigo-600 text-3xl"> monitoring </mat-icon>
+            </div>
+
+            <h3 class="text-base font-semibold text-gray-800">Upload EKG Image</h3>
+
+            <p class="text-sm text-gray-500 mt-1 mb-5 max-w-md">
+              Upload clear EKG or ECG scan image in PNG, JPG or WEBP format.
+            </p>
+
+            <button type="button" mat-flat-button color="primary" (click)="ekgInput.click()">
+              <mat-icon>upload</mat-icon>
+              Choose File
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMERGENCY CONTACTS -->
+  <app-emergency-contacts
+    [contacts]="emergencyContacts"
+    (onAddContact)="addEmergencyContact()"
+    (onRemoveContact)="removeEmergencyContact($event)"
+    [formGroup]="profileForm"
+  />
+</form>

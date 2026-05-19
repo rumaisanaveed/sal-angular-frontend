@@ -1,0 +1,23 @@
+<div class="otp-wrapper">
+  <h2 class="text-xl font-bold mb-2">Verify OTP</h2>
+
+  <p class="text-sm text-gray-500 mb-6">Enter the 6-digit code sent to your email</p>
+
+  <div class="flex gap-3 justify-center">
+    <ng-otp-input
+      [formControl]="otp"
+      [config]="{
+        length: 6,
+        inputStyles: {
+          'font-size': '14px',
+        },
+      }"
+    ></ng-otp-input>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-6">
+    <button mat-flat-button color="primary" (click)="submit()" [disabled]="getOtp().length < 6">
+      Verify
+    </button>
+  </div>
+</div>

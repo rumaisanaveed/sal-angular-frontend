@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -24,27 +24,26 @@ import { SectionEnum } from '../../core/interfaces/lifestyle';
 })
 export class Lifestyle {
   activeSection: SectionEnum = SectionEnum.Lifestyle;
-  lifestyleForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.lifestyleForm = this.fb.group({
-      // Lifestyle
-      religion: [''],
-      worship: [''],
-      worshipName: [''],
-      worshipAddress: [''],
+  private fb = inject(FormBuilder);
 
-      // Work & Home
-      maritalStatus: [''],
-      workStatus: [''],
-      education: [''],
-      occupation: [''],
+  lifestyleForm = this.fb.group({
+    // Lifestyle
+    religion: [''],
+    worship: [''],
+    worshipName: [''],
+    worshipAddress: [''],
 
-      // Exercise & Diet
-      diet: [''],
-      exercise: [''],
-    });
-  }
+    // Work & Home
+    maritalStatus: [''],
+    workStatus: [''],
+    education: [''],
+    occupation: [''],
+
+    // Exercise & Diet
+    diet: [''],
+    exercise: [''],
+  });
 
   lifestyleData = {
     // Lifestyle Information

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,6 +11,9 @@ import {
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { ModalService } from '../../core/services/modal-service/modal.service';
+import { VerifyOtpModalComponent } from '../../components/auth/verify-otp-modal/verify-otp-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export const passwordMatchValidator: ValidatorFn = (
   control: AbstractControl,
@@ -32,6 +35,8 @@ export const passwordMatchValidator: ValidatorFn = (
   styleUrl: './signup.component.css',
 })
 export class SignupComponent {
+  private dialog = inject(MatDialog);
+
   signupForm = new FormGroup(
     {
       name: new FormControl('', [Validators.required]),
@@ -41,6 +46,19 @@ export class SignupComponent {
     },
     { validators: passwordMatchValidator },
   );
+
+  openOtpModal() {
+    const ref = this.dialog.open(VerifyOtpModalComponent, {
+      width: '420px',
+      disableClose: true,
+      autoFocus: false,
+      panelClass: 'otp-dialog',
+    });
+
+    ref.afterClosed().subscribe((otp: string | null) => {
+      if (!otp) return;
+    });
+  }
 
   onSubmit() {}
 }

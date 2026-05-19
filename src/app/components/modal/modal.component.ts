@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 export interface ModalData {
   title: string;
   content: any;
+  showButtons?: boolean;
 }
 
 @Component({

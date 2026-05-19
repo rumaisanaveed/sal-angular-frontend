@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -37,8 +37,6 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
 export class Hospitals {
   mode: InputModeEnum = InputModeEnum.Search;
   selectedHospital: SelectedHospital | null = null;
-
-  hospitalForm!: FormGroup;
 
   searchResults: SelectedHospital[] = [
     {
@@ -86,29 +84,28 @@ export class Hospitals {
     { label: 'Other', value: 'other' },
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.hospitalForm = this.fb.group({
-      name: ['', Validators.required],
-      service: ['', Validators.required],
-      address: ['', Validators.required],
-      phone: ['', Validators.required],
-      speciality: ['', Validators.required],
-      status: ['', Validators.required],
-      npi: [''],
-      salId: [''],
-      email: [''],
-    });
-    this.editHospitalForm = this.fb.group({
-      name: ['', Validators.required],
-      service: ['', Validators.required],
-      speciality: ['', Validators.required],
-      status: ['', Validators.required],
-    });
-  }
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  hospitalForm = this.fb.group({
+    name: ['', Validators.required],
+    service: ['', Validators.required],
+    address: ['', Validators.required],
+    phone: ['', Validators.required],
+    speciality: ['', Validators.required],
+    status: ['', Validators.required],
+    npi: [''],
+    salId: [''],
+    email: [''],
+  });
+
+  editHospitalForm = this.fb.group({
+    name: ['', Validators.required],
+    service: ['', Validators.required],
+    speciality: ['', Validators.required],
+    status: ['', Validators.required],
+  });
 
   currentHospitals = new MatTableDataSource<Hospital>(CURRENT_HOSPITALS);
   pastHospitals = new MatTableDataSource<Hospital>(PAST_HOSPITALS);
@@ -117,7 +114,6 @@ export class Hospitals {
   allHospitals = [...this.searchResults];
 
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
-  editHospitalForm!: FormGroup;
 
   searchHospital(value: string) {
     const v = value.toLowerCase();

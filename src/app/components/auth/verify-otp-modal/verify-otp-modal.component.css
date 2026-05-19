@@ -1,0 +1,8 @@
+::ng-deep .otp-dialog .mat-mdc-dialog-container {
+  border-radius: 12px;
+  max-height: 600px !important;
+}
+
+.otp-wrapper {
+  padding: 24px;
+}

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TherapiesComponent } from '../../components/conditions/therapies/therapies.component';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { DevicesComponent } from '../../components/conditions/devices/devices.component';
+import { TherapiesComponent } from '../../components/conditions/therapies/therapies.component';
 
 @Component({
   selector: 'app-care',
@@ -10,8 +10,14 @@ import { DevicesComponent } from '../../components/conditions/devices/devices.co
   styleUrl: './care.css',
 })
 export class Care {
-  therapyForm!: FormGroup;
-  deviceForm!: FormGroup;
+  private fb = inject(FormBuilder);
+
+  therapyForm = this.fb.group({
+    therapy: ['', Validators.required],
+  });
+  deviceForm = this.fb.group({
+    device: ['', Validators.required],
+  });
 
   devices: string[] = [
     'Insulin Pump',
@@ -38,15 +44,4 @@ export class Care {
     'Hydrotherapy',
     'Massage Therapy',
   ];
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.therapyForm = this.fb.group({
-      therapy: ['', Validators.required],
-    });
-    this.deviceForm = this.fb.group({
-      device: ['', Validators.required],
-    });
-  }
 }

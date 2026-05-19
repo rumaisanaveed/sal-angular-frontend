@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../../app/components/sidebar/sidebar.component';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -16,7 +16,7 @@ export class DashboardLayoutComponent {
 
   isMobile = false;
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  private breakpointObserver = inject(BreakpointObserver);
 
   ngOnInit() {
     this.breakpointObserver.observe(['(max-width: 768px)']).subscribe((result) => {

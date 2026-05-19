@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,35 +23,31 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
   styleUrl: './history.css',
 })
 export class History {
-  relationsForm!: FormGroup;
-  editRelationsForm!: FormGroup;
-
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
   editingIndex: number | null = null;
   editSelectedCondition: Condition | null = null;
   editConditionResults: Condition[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.relationsForm = this.fb.group({
-      brother: [false],
-      sister: [false],
-      mother: [false],
-      father: [false],
-      paternalGrandmother: [false],
-      maternalGrandmother: [false],
-      paternalGrandfather: [false],
-      maternalGrandfather: [false],
-      maternalAunt: [false],
-      paternalAunt: [false],
-      maternalUncle: [false],
-      paternalUncle: [false],
-    });
-    this.editRelationsForm = this.fb.group({});
-  }
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  relationsForm = this.fb.group({
+    brother: [false],
+    sister: [false],
+    mother: [false],
+    father: [false],
+    paternalGrandmother: [false],
+    maternalGrandmother: [false],
+    paternalGrandfather: [false],
+    maternalGrandfather: [false],
+    maternalAunt: [false],
+    paternalAunt: [false],
+    maternalUncle: [false],
+    paternalUncle: [false],
+  });
+
+  editRelationsForm = this.fb.group({});
 
   conditionResults: Condition[] = [];
   selectedCondition: Condition | null = null;
@@ -77,7 +73,7 @@ export class History {
   }
 
   private getSelectedRelations(): string[] {
-    const value = this.relationsForm.value;
+    const value = this.relationsForm.value as Record<string, boolean>;
 
     return Object.keys(value)
       .filter((key) => value[key])
@@ -163,8 +159,10 @@ export class History {
   saveEdit() {
     if (this.editingIndex === null) return;
 
-    const relations = Object.keys(this.editRelationsForm.value)
-      .filter((key) => this.editRelationsForm.value[key])
+    const value = this.editRelationsForm.value as Record<string, boolean>;
+
+    const relations = Object.keys(value)
+      .filter((key) => value[key])
       .map((key) => this.formatLabel(key));
 
     this.historyData[this.editingIndex] = {

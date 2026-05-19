@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,27 +31,24 @@ import { AllergyFormComponent } from '../../components/allergies/allergy-form/al
   styleUrl: './allergies.css',
 })
 export class Allergies {
-  allergyForm!: FormGroup;
-  editAllergyForm!: FormGroup;
   selectedAllergy!: Allergy | null;
   columns = ['name', 'details', 'actions'];
   dataSource = new MatTableDataSource(ALLERGIES_DATA);
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.allergyForm = this.fb.group({
-      name: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-    this.editAllergyForm = this.fb.group({
-      name: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-  }
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  allergyForm = this.fb.group({
+    name: ['', Validators.required],
+    details: ['', Validators.required],
+  });
+
+  editAllergyForm = this.fb.group({
+    name: ['', Validators.required],
+    details: ['', Validators.required],
+  });
 
   ngOnInit() {
     this.dataSource.filterPredicate = (data, filter) => {

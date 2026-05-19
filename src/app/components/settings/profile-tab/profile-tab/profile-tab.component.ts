@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -34,7 +34,7 @@ import { ImageUploadComponent } from '../../../image-upload.component/image-uplo
 export class ProfileTabComponent {
   profilePreview: string | ArrayBuffer | null = null;
   ekgPreview: string | ArrayBuffer | null = null;
-  profileForm!: FormGroup;
+  private fb = inject(FormBuilder);
 
   bloodTypes = [
     { value: 'A+', label: 'A+' },
@@ -70,21 +70,19 @@ export class ProfileTabComponent {
     },
   ];
 
-  constructor(private fb: FormBuilder) {
-    this.profileForm = this.fb.group({
-      dob: ['', Validators.required],
-      height: ['', Validators.required],
-      weight: ['', Validators.required],
-      gender: ['', Validators.required],
-      bloodType: ['', Validators.required],
-      countryOfBirth: ['', Validators.required],
-      organDonor: [''],
-      nationality: [''],
-      smoker: [''],
+  profileForm = this.fb.group({
+    dob: ['', Validators.required],
+    height: ['', Validators.required],
+    weight: ['', Validators.required],
+    gender: ['', Validators.required],
+    bloodType: ['', Validators.required],
+    countryOfBirth: ['', Validators.required],
+    organDonor: [''],
+    nationality: [''],
+    smoker: [''],
 
-      emergencyContacts: this.fb.array([this.createEmergencyContact()]),
-    });
-  }
+    emergencyContacts: this.fb.array([this.createEmergencyContact()]),
+  });
 
   get emergencyContacts(): FormArray {
     return this.profileForm.get('emergencyContacts') as FormArray;

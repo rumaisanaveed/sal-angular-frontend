@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -69,7 +69,7 @@ export class Insurance {
 
   disabilityInsuranceProviders = DISABILITY_INSURANCE_PROVIDERS;
 
-  constructor(private fb: FormBuilder) {}
+  private fb = inject(FormBuilder);
 
   ngOnInit(): void {
     this.initializeForm();

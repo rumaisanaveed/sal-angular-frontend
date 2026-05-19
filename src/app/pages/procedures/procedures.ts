@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { Procedure } from '../../core/interfaces/procedures';
 import { ProceduresTableComponent } from '../../components/procedures/procedures-table/procedures-table.component';
-import { ModalService } from '../../core/services/modal-service/modal.service';
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
+import { Procedure } from '../../core/interfaces/procedures';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
-import { CdkNoDataRow } from '@angular/cdk/table';
+import { ModalService } from '../../core/services/modal-service/modal.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-procedures',
@@ -20,15 +20,14 @@ import { CdkNoDataRow } from '@angular/cdk/table';
     CommonModule,
     SearchBarComponent,
     ProceduresTableComponent,
+    MatButtonModule,
   ],
   templateUrl: './procedures.html',
   styleUrl: './procedures.css',
 })
 export class Procedures {
-  procedureForm!: FormGroup;
   dataSource = new MatTableDataSource<Procedure>(PROCEDURES_DATA);
 
-  editProcedureForm!: FormGroup;
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
   selectedProcedure: Procedure | null = null;
 
@@ -42,26 +41,25 @@ export class Procedures {
     { label: 'Orthopedic', value: 'orthopedic' },
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.procedureForm = this.fb.group({
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      code: ['', Validators.required],
-      date: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-    this.editProcedureForm = this.fb.group({
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      code: ['', Validators.required],
-      date: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-  }
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  procedureForm = this.fb.group({
+    name: ['', Validators.required],
+    type: ['', Validators.required],
+    code: ['', Validators.required],
+    date: ['', Validators.required],
+    details: ['', Validators.required],
+  });
+
+  editProcedureForm = this.fb.group({
+    name: ['', Validators.required],
+    type: ['', Validators.required],
+    code: ['', Validators.required],
+    date: ['', Validators.required],
+    details: ['', Validators.required],
+  });
 
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();

@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -37,14 +31,28 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
     ConditionsTableComponent,
   ],
 })
-export class Conditions implements OnInit {
-  conditionForm!: FormGroup;
-  therapyForm!: FormGroup;
-  deviceForm!: FormGroup;
+export class Conditions {
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  conditionForm = this.fb.group({
+    name: ['', Validators.required],
+    details: ['', Validators.required],
+  });
+  therapyForm = this.fb.group({
+    therapy: ['', Validators.required],
+  });
+  deviceForm = this.fb.group({
+    device: ['', Validators.required],
+  });
+  editConditionForm = this.fb.group({
+    name: ['', Validators.required],
+    details: ['', Validators.required],
+  });
 
   mode: InputModeEnum = InputModeEnum.Search;
 
-  editConditionForm!: FormGroup;
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
   searchResults: Condition[] = [
@@ -64,33 +72,6 @@ export class Conditions implements OnInit {
   selectedCondition: Condition | null = null;
 
   dataSource = new MatTableDataSource<Condition>(ALL_CONDITIONS);
-
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {}
-
-  ngOnInit(): void {
-    this.initForm();
-  }
-
-  initForm() {
-    this.conditionForm = this.fb.group({
-      name: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-    this.therapyForm = this.fb.group({
-      therapy: ['', Validators.required],
-    });
-    this.deviceForm = this.fb.group({
-      device: ['', Validators.required],
-    });
-    this.editConditionForm = this.fb.group({
-      name: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-  }
 
   switchMode(mode: InputModeEnum) {
     this.mode = mode;
@@ -129,7 +110,7 @@ export class Conditions implements OnInit {
         return;
       }
 
-      this.addCondition(this.conditionForm.value);
+      this.addCondition(this.conditionForm.value as Condition);
     }
 
     this.conditionForm.reset({});

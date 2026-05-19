@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TemplateRef } from '@angular/core';
 import { ModalComponent } from '../../../components/modal/modal.component';
@@ -7,11 +7,15 @@ import { ModalComponent } from '../../../components/modal/modal.component';
 export class ModalService {
   private dialogRef?: MatDialogRef<ModalComponent>;
 
-  constructor(private dialog: MatDialog) {}
+  private dialog = inject(MatDialog);
 
-  open(title: string, content: TemplateRef<any>): MatDialogRef<ModalComponent> {
+  open(
+    title: string,
+    content: TemplateRef<any>,
+    showButtons: boolean = true,
+  ): MatDialogRef<ModalComponent> {
     this.dialogRef = this.dialog.open(ModalComponent, {
-      data: { title, content },
+      data: { title, content, showButtons },
     });
 
     return this.dialogRef;

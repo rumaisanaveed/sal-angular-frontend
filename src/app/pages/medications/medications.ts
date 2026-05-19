@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,30 +38,27 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
   ],
 })
 export class Medications {
-  medicationForm!: FormGroup;
-  editMedicationForm!: FormGroup;
   mode: InputModeEnum = InputModeEnum.Search;
   dataSource = new MatTableDataSource(MEDICATIONS_DATA);
   columns = ['name', 'dosage', 'actions'];
 
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.medicationForm = this.fb.group({
-      mode: ['search'],
-      name: [''],
-      dosage: [''],
-      search: [''],
-    });
-    this.editMedicationForm = this.fb.group({
-      name: ['', Validators.required],
-      dosage: ['', Validators.required],
-    });
-  }
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
+
+  medicationForm = this.fb.group({
+    mode: ['search'],
+    name: [''],
+    dosage: [''],
+    search: [''],
+  });
+
+  editMedicationForm = this.fb.group({
+    name: ['', Validators.required],
+    dosage: ['', Validators.required],
+  });
 
   searchResults = [
     { name: 'Paracetamol', dosage: '500mg' },

@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -43,8 +37,6 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
 })
 export class Doctors {
   mode: InputModeEnum = InputModeEnum.Search;
-  doctorForm!: FormGroup;
-  editDoctorForm!: FormGroup;
 
   selectedDoctor: Doctor | null = null;
   selectedDoctorType: 'main' | 'other' = 'other';
@@ -104,34 +96,33 @@ export class Doctors {
 
   allDoctors = [...this.searchResults];
 
-  constructor(
-    private fb: FormBuilder,
-    private modal: ModalService,
-    private confirmService: ConfirmationModalService,
-  ) {
-    this.doctorForm = this.fb.group({
-      name: ['', Validators.required],
-      service: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      phone: ['', Validators.required],
-      speciality: ['', Validators.required],
-      gender: ['', Validators.required],
-      doctorType: ['', Validators.required],
+  private fb = inject(FormBuilder);
+  private modal = inject(ModalService);
+  private confirmService = inject(ConfirmationModalService);
 
-      // optional fields
-      state: [''],
-      email: [''],
-      npi: [''],
-      credential: [''],
-      salId: [''],
-    });
-    this.editDoctorForm = this.fb.group({
-      name: ['', Validators.required],
-      speciality: ['', Validators.required],
-      status: ['', Validators.required],
-    });
-  }
+  doctorForm = this.fb.group({
+    name: ['', Validators.required],
+    service: ['', Validators.required],
+    address: ['', Validators.required],
+    city: ['', Validators.required],
+    phone: ['', Validators.required],
+    speciality: ['', Validators.required],
+    gender: ['', Validators.required],
+    doctorType: ['', Validators.required],
+
+    // optional fields
+    state: [''],
+    email: [''],
+    npi: [''],
+    credential: [''],
+    salId: [''],
+  });
+
+  editDoctorForm = this.fb.group({
+    name: ['', Validators.required],
+    speciality: ['', Validators.required],
+    status: ['', Validators.required],
+  });
 
   selectDoctor(doc: Doctor) {
     const mapped: Doctor = {

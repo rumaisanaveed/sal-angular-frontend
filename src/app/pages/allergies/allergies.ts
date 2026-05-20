@@ -12,6 +12,7 @@ import { Allergy } from '../../core/interfaces/allergies';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { AllergyTableComponent } from '../../components/allergies/allergy-table/allergy-table.component';
 import { AllergyFormComponent } from '../../components/allergies/allergy-form/allergy-form.component';
+import { AllergiesService } from '../../core/services/allergies/allergies.service';
 
 @Component({
   selector: 'app-allergies',
@@ -39,6 +40,7 @@ export class Allergies {
   private fb = inject(FormBuilder);
   private modal = inject(ModalService);
   private confirmService = inject(ConfirmationModalService);
+  private allergiesService = inject(AllergiesService);
 
   allergyForm = this.fb.group({
     name: ['', Validators.required],
@@ -58,6 +60,16 @@ export class Allergies {
         data.name.toLowerCase().includes(search) || data.details.toLowerCase().includes(search)
       );
     };
+
+    // get allergies here
+    this.allergiesService.getAll().subscribe({
+      next: (data) => {
+        console.log('data', data);
+      },
+      error: (error) => {
+        console.log('error', error);
+      },
+    });
   }
 
   applyFilter(value: string) {

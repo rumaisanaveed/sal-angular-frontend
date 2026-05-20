@@ -23,7 +23,9 @@
           Password is required.
         </small>
       </div>
-      <button mat-flat-button class="w-full rounded-lg!">Login</button>
+      <button mat-flat-button class="w-full rounded-lg!" [disabled]="loginForm.disabled">
+        Login
+      </button>
     </form>
     <p class="text-gray-500">
       Don't have an account?

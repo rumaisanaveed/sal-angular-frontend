@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   isOpen: boolean = false;
+  private router = inject(Router);
   @Output() close = new EventEmitter<void>();
 
   menuItems = [
@@ -40,4 +41,10 @@ export class SidebarComponent {
     { label: 'SAL Card', icon: 'credit_card', route: '/sal-card' },
     { label: 'Settings', icon: 'settings', route: '/settings' },
   ];
+
+  logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
 }

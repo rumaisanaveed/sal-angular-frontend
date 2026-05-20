@@ -1,7 +1,7 @@
 <div class="otp-wrapper">
   <h2 class="text-xl font-bold mb-2">Verify OTP</h2>
 
-  <p class="text-sm text-gray-500 mb-6">Enter the 6-digit code sent to your email</p>
+  <p class="text-sm text-gray-500 mb-2">Enter the 6-digit code sent to your email</p>
 
   <div class="flex gap-3 justify-center">
     <ng-otp-input
@@ -15,7 +15,17 @@
     ></ng-otp-input>
   </div>
 
-  <div class="flex justify-end gap-3 mt-6">
+  <p class="text-center text-sm mt-4 text-gray-500">
+    <span *ngIf="!canResend()"> Resend OTP available in {{ timer() }}s </span>
+
+    <span *ngIf="canResend()"> You can resend OTP now </span>
+  </p>
+
+  <div class="flex justify-between items-center mt-6">
+    <button mat-button color="primary" (click)="handleResend()" [disabled]="!canResend()">
+      Resend OTP
+    </button>
+
     <button mat-flat-button color="primary" (click)="submit()" [disabled]="getOtp().length < 6">
       Verify
     </button>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,9 +11,12 @@ import {
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { ModalService } from '../../core/services/modal-service/modal.service';
-import { VerifyOtpModalComponent } from '../../components/auth/verify-otp-modal/verify-otp-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
+import { VerifyOtpModalComponent } from '../../components/auth/verify-otp-modal/verify-otp-modal.component';
+import { SignupPayload } from '../../core/interfaces/auth';
+import { AuthService } from '../../core/services/auth/auth.service';
 
 export const passwordMatchValidator: ValidatorFn = (
   control: AbstractControl,
@@ -36,6 +39,10 @@ export const passwordMatchValidator: ValidatorFn = (
 })
 export class SignupComponent {
   private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
+
+  isLoading = false;
 
   signupForm = new FormGroup(
     {
@@ -60,5 +67,42 @@ export class SignupComponent {
     });
   }
 
-  onSubmit() {}
+  onSubmit() {
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    const payload: SignupPayload = {
+      name: this.signupForm.value.name!,
+      email: this.signupForm.value.email!,
+      password: this.signupForm.value.password!,
+      role: 'patient',
+    };
+
+    this.signupForm.disable();
+
+    this.authService
+      .signup(payload)
+      .pipe(
+        finalize(() => {
+          this.signupForm.enable();
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.toastr.success(data.message ?? 'Patient registered successfully.');
+            this.openOtpModal();
+          }
+        },
+
+        error: (error) => {
+          const message =
+            error?.error?.message || error?.errors?.join(', ') || 'Something went wrong';
+
+          this.toastr.error(message);
+        },
+      });
+  }
 }

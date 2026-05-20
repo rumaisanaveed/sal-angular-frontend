@@ -64,7 +64,9 @@
           I agree to the <span class="text-primary">Terms & Conditions</span>
         </p>
       </mat-checkbox>
-      <button mat-flat-button class="w-full rounded-lg!" (click)="openOtpModal()">Signup</button>
+      <button mat-flat-button class="w-full rounded-lg!" [disabled]="signupForm.disabled">
+        {{ isLoading ? 'Signing up...' : 'Sign up' }}
+      </button>
     </form>
     <p class="text-gray-500">
       Already have an account?

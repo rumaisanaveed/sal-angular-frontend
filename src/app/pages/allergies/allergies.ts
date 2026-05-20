@@ -34,7 +34,6 @@ import { finalize } from 'rxjs';
   styleUrl: './allergies.css',
 })
 export class Allergies {
-  selectedAllergy!: Allergy | null;
   columns = ['name', 'details', 'status', 'displayOnCard', 'actions'];
   dataSource = new MatTableDataSource<Allergy>([]);
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;

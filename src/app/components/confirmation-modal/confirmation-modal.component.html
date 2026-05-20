@@ -34,7 +34,11 @@
     </p>
 
     <div class="flex justify-center gap-3 w-full">
-      <button (click)="cancel()" class="rounded-md! w-full! text-gray-600! border border-gray-300!">
+      <button
+        (click)="cancel()"
+        [disabled]="isLoading"
+        class="rounded-md! w-full! text-gray-600! border border-gray-300!"
+      >
         Cancel
       </button>
 
@@ -45,6 +49,7 @@
           'bg-green-500!': data.type === 'success',
         }"
         (click)="confirm()"
+        [disabled]="isLoading"
         class="rounded-md! w-full! text-white!"
       >
         Yes, Continue

@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Allergy } from '../../../core/interfaces/allergies';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { DataSource } from '@angular/cdk/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Allergy } from '../../../core/interfaces/allergies';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-allergy-table',
-  imports: [MatTableModule, MatIconModule, MatButtonModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule, CommonModule],
   templateUrl: './allergy-table.component.html',
   styleUrl: './allergy-table.component.css',
 })
 export class AllergyTableComponent {
-  @Input() data!: DataSource<Allergy>;
+  @Input() data!: MatTableDataSource<Allergy>;
   @Input() cols: string[] = [];
   @Output() onEdit = new EventEmitter<Allergy>();
   @Output() onDelete = new EventEmitter();
@@ -21,7 +21,7 @@ export class AllergyTableComponent {
     this.onEdit.emit(allergy);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(allergy: Allergy) {
+    this.onDelete.emit(allergy);
   }
 }

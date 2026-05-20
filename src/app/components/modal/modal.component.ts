@@ -20,6 +20,8 @@ export class ModalComponent {
   @Output() save = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
+  isLoading = false;
+
   constructor(
     private dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModalData,
@@ -36,5 +38,9 @@ export class ModalComponent {
 
   onSave() {
     this.save.emit();
+  }
+
+  setLoading(state: boolean) {
+    this.isLoading = state;
   }
 }

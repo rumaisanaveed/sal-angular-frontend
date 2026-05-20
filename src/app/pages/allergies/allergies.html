@@ -3,7 +3,9 @@
     <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Allergy</h2>
 
     <app-allergy-form [allergyForm]="allergyForm" (submit)="addAllergy()">
-      <button mat-flat-button color="primary" class="w-fit">Save</button>
+      <button mat-flat-button color="primary" class="w-fit" [disabled]="allergyForm.disabled">
+        Save
+      </button>
     </app-allergy-form>
   </div>
 
@@ -18,7 +20,7 @@
       [data]="dataSource"
       [cols]="columns"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteConfirmationModal()"
+      (onDelete)="openDeleteConfirmationModal($event)"
     />
   </div>
 

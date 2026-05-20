@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [MatIconModule, CommonModule, MatButtonModule],
 })
 export class ConfirmationModalComponent {
+  isLoading = false;
+
   constructor(
     private dialogRef: MatDialogRef<ConfirmationModalComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -21,10 +23,12 @@ export class ConfirmationModalComponent {
   ) {}
 
   confirm() {
+    this.isLoading = true;
     this.dialogRef.close(true);
   }
 
   cancel() {
+    if (this.isLoading) return;
     this.dialogRef.close(false);
   }
 }

@@ -15,7 +15,9 @@
 
   <!-- Footer -->
   <div class="flex justify-end gap-3 mt-6" *ngIf="data.showButtons">
-    <button mat-button (click)="onCancel()" class="bg-blue-100!">Cancel</button>
-    <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+    <button mat-button (click)="onCancel()" class="bg-blue-100!" [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isLoading">Save</button>
   </div>
 </div>

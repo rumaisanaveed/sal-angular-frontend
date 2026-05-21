@@ -53,7 +53,7 @@ export const PROFILE_API_URL = new InjectionToken<string>('PROFILE_API_URL', {
 export const MEDICATIONS_API_URL = new InjectionToken<string>('MEDICATIONS_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/medications`;
   },
 });

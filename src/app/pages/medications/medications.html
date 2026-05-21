@@ -13,7 +13,7 @@
         <!-- Search Results -->
         <app-selectable-list
           [items]="searchResults"
-          labelKey="name"
+          labelKey="medicineName"
           subLabelKey="dosage"
           (onSelect)="selectMedication($event)"
         />
@@ -21,7 +21,7 @@
         @if (selectedMedication) {
           <app-selected-item
             [item]="{
-              title: selectedMedication.name || '',
+              title: selectedMedication.medicineName || '',
               subtitle: selectedMedication.dosage || '',
             }"
           />
@@ -34,11 +34,14 @@
         <div>
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Medication name</mat-label>
-            <input matInput formControlName="name" placeholder="Medication Name" />
+            <input matInput formControlName="medicineName" placeholder="Medication Name" />
           </mat-form-field>
 
           <small
-            *ngIf="medicationForm.get('name')?.invalid && medicationForm.get('name')?.touched"
+            *ngIf="
+              medicationForm.get('medicineName')?.invalid &&
+              medicationForm.get('medicineName')?.touched
+            "
             class="text-red-500 text-xs"
           >
             This field is required
@@ -80,7 +83,7 @@
       [data]="dataSource"
       [cols]="columns"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteModal()"
+      (onDelete)="openDeleteModal($event)"
     />
   </div>
 
@@ -90,11 +93,14 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Medication name</mat-label>
-          <input matInput formControlName="name" placeholder="Medication Name" />
+          <input matInput formControlName="medicineName" placeholder="Medication Name" />
         </mat-form-field>
 
         <small
-          *ngIf="editMedicationForm.get('name')?.invalid && editMedicationForm.get('name')?.touched"
+          *ngIf="
+            editMedicationForm.get('medicineName')?.invalid &&
+            editMedicationForm.get('medicineName')?.touched
+          "
           class="text-red-500 text-xs"
         >
           This field is required
@@ -105,11 +111,7 @@
       <div>
         <mat-form-field appearance="outline" class="w-full compact">
           <mat-label>Dosage</mat-label>
-          <mat-select formControlName="dosage">
-            <mat-option *ngFor="let dose of dosages" [value]="dose.value">{{
-              dose.label
-            }}</mat-option>
-          </mat-select>
+          <input matInput formControlName="dosage" placeholder="0.5 mg" />
         </mat-form-field>
 
         <small

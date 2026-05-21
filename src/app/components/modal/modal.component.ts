@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,6 +25,7 @@ export class ModalComponent {
   constructor(
     private dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModalData,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   close() {
@@ -42,5 +43,6 @@ export class ModalComponent {
 
   setLoading(state: boolean) {
     this.isLoading = state;
+    this.cdr.detectChanges();
   }
 }

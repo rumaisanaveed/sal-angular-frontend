@@ -1,18 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { Medication } from '../../../core/interfaces/medication';
-import { DataSource } from '@angular/cdk/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Medication } from '../../../core/interfaces/medication';
 
 @Component({
   selector: 'app-medication-table',
-  imports: [MatTableModule, MatIconModule, MatButtonModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule, CommonModule],
   templateUrl: './medication-table.component.html',
   styleUrl: './medication-table.component.css',
 })
 export class MedicationTableComponent {
-  @Input() data!: DataSource<Medication>;
+  @Input() data!: MatTableDataSource<Medication>;
   @Input() cols: string[] = [];
 
   @Output() onEdit = new EventEmitter<Medication>();
@@ -22,7 +22,7 @@ export class MedicationTableComponent {
     this.onEdit.emit(medication);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(med: Medication) {
+    this.onDelete.emit(med);
   }
 }

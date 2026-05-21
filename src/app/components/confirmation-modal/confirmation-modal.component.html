@@ -37,6 +37,7 @@
       <button
         (click)="cancel()"
         [disabled]="isLoading"
+        mat-stroked-button
         class="rounded-md! w-full! text-gray-600! border border-gray-300!"
       >
         Cancel
@@ -52,7 +53,7 @@
         [disabled]="isLoading"
         class="rounded-md! w-full! text-white!"
       >
-        Yes, Continue
+        {{ isLoading ? 'Deleting' : 'Yes, Continue' }}
       </button>
     </div>
   </div>

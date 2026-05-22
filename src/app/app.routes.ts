@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { DashboardLayoutComponent } from '../layouts/dashboard-layout/dashboard-layout.component';
 import { Allergies } from './pages/allergies/allergies';
 import { Conditions } from './pages/conditions/conditions';
 import { Doctors } from './pages/doctors/doctors';
@@ -15,6 +14,7 @@ import { Settings } from './pages/settings/settings';
 import { SignupComponent } from './pages/signup/signup.component';
 import { TherapiesComponent } from './pages/therapies/therapies.component';
 import { DevicesComponent } from './pages/medical-devices/devices.component';
+import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
 
 export const routes: Routes = [
   {

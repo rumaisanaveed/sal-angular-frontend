@@ -1,9 +1,9 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { SidebarComponent } from '../../app/components/sidebar/sidebar.component';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-dashboard-layout.component',

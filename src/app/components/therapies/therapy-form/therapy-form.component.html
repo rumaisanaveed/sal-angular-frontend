@@ -1,0 +1,58 @@
+<form [formGroup]="therapyForm" class="flex flex-col gap-4 w-full">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" placeholder="Therapy name" class="text-sm! h-4!" />
+  </mat-form-field>
+  <small
+    *ngIf="therapyForm.get('name')?.invalid && therapyForm.get('name')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea
+      [rows]="10"
+      matInput
+      formControlName="description"
+      placeholder="Description"
+      class="text-sm!"
+    ></textarea>
+  </mat-form-field>
+  <small
+    *ngIf="therapyForm.get('description')?.invalid && therapyForm.get('description')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Frequency</mat-label>
+    <input
+      matInput
+      formControlName="frequency"
+      placeholder="e.g; 3 times per week"
+      class="text-sm! h-4!"
+    />
+  </mat-form-field>
+  <small
+    *ngIf="therapyForm.get('frequency')?.invalid && therapyForm.get('frequency')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Duration</mat-label>
+    <input matInput formControlName="duration" placeholder="e.g: 6 weeks" class="text-sm! h-4!" />
+  </mat-form-field>
+  <small
+    *ngIf="therapyForm.get('duration')?.invalid && therapyForm.get('duration')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <ng-content></ng-content>
+</form>

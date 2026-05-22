@@ -23,7 +23,16 @@ export class SidebarComponent {
       route: '/medications',
     },
     { label: 'Conditions', icon: 'monitor_heart', route: '/conditions' },
-    { label: 'Care', icon: 'health_and_safety', route: '/care' },
+    {
+      label: 'Therapies',
+      icon: 'psychology',
+      route: '/therapies',
+    },
+    {
+      label: 'Medical Devices',
+      icon: 'devices',
+      route: '/devices',
+    },
     { label: 'Procedures', icon: 'healing', route: '/procedures' },
     { label: 'Doctors', icon: 'medical_services', route: '/doctors' },
     {

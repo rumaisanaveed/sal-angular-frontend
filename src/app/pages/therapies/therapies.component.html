@@ -1,0 +1,37 @@
+<div class="p-2 min-h-screen">
+  <div
+    class="bg-white shadow-sm p-6 mb-6 border border-gray-200 max-w-md"
+    style="border-radius: 15px"
+  >
+    <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Therapy</h2>
+
+    <app-therapy-form [therapyForm]="therapyForm" (submit)="addTherapy()">
+      <button mat-flat-button color="primary" class="w-fit" [disabled]="therapyForm.disabled">
+        Save
+      </button>
+    </app-therapy-form>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
+    <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
+      <h2 class="text-primary font-semibold text-xl md:text-2xl">Therapies</h2>
+      <app-search-bar (search)="applyFilter($event)"></app-search-bar>
+    </div>
+
+    <!-- Therapies Table -->
+    <app-therapy-table
+      [data]="dataSource"
+      [cols]="columns"
+      (onEdit)="openEditModal($event)"
+      (onDelete)="openDeleteConfirmationModal($event)"
+    />
+  </div>
+
+  <!-- Edit Therapy Modal -->
+  <ng-template #editModal>
+    <app-therapy-form [therapyForm]="editTherapyForm" />
+  </ng-template>
+
+  <!-- Delete Therapy Modal -->
+  <ng-template #deleteModal> </ng-template>
+</div>

@@ -170,7 +170,7 @@ export class Medications {
     ref.componentInstance.cancel.subscribe(() => {});
   }
 
-  editMedication(medication: Medication, ref: any) {
+  private editMedication(medication: Medication, ref: any) {
     const payload: AddMedicationPayload = {
       medicineName: this.editMedicationForm.value.medicineName ?? '',
       dosage: this.editMedicationForm.value.dosage ?? '',
@@ -207,7 +207,7 @@ export class Medications {
       });
   }
 
-  deleteMedication(medication: Medication) {
+  private deleteMedication(medication: Medication) {
     this.medicationsService.delete(medication.id).subscribe({
       next: (data) => {
         if (data.success) {
@@ -247,7 +247,7 @@ export class Medications {
     }
   }
 
-  addMedication(payload: AddMedicationPayload) {
+  private addMedication(payload: AddMedicationPayload) {
     this.medicationForm.disable();
 
     this.medicationsService

@@ -13,6 +13,10 @@ import { SelectedItemComponent } from '../../components/selected-item/selected-i
 import { InputModeEnum } from '../../core/constants';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { ModalService } from '../../core/services/modal-service/modal.service';
+import { ConditionsService } from '../../core/services/conditions/conditions.service';
+import { AddConditionPayload, Condition } from '../../core/interfaces/conditions';
+import { finalize } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-condition',
@@ -35,6 +39,8 @@ export class Conditions {
   private fb = inject(FormBuilder);
   private modal = inject(ModalService);
   private confirmService = inject(ConfirmationModalService);
+  private conditionsService = inject(ConditionsService);
+  private toastr = inject(ToastrService);
 
   conditionForm = this.fb.group({
     name: ['', Validators.required],
@@ -55,23 +61,27 @@ export class Conditions {
 
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
-  searchResults: Condition[] = [
-    {
-      name: 'Hypertension',
-      details: 'Chronic',
-    },
-    {
-      name: 'Diabetes',
-      details: 'Physical Health',
-    },
-    {
-      name: 'Anxiety',
-      details: 'Mental Health',
-    },
-  ];
+  searchResults: Condition[] = [];
   selectedCondition: Condition | null = null;
 
-  dataSource = new MatTableDataSource<Condition>(ALL_CONDITIONS);
+  dataSource = new MatTableDataSource<Condition>([]);
+
+  ngOnInit(): void {
+    this.loadConditions();
+  }
+
+  loadConditions() {
+    this.conditionsService.getAll().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.dataSource.data = res.data.medicalConditions;
+        }
+      },
+      error: (err) => {
+        console.log('Error fetching conditions', err);
+      },
+    });
+  }
 
   switchMode(mode: InputModeEnum) {
     this.mode = mode;
@@ -80,41 +90,92 @@ export class Conditions {
   }
 
   searchCondition(query: string) {
-    if (!query?.trim()) {
+    if (!query.trim()) {
       this.searchResults = [];
       return;
     }
 
-    const q = query.toLowerCase();
+    if (query.trim().length < 3) {
+      return;
+    }
 
-    this.searchResults = ALL_CONDITIONS.filter((c) => c.name.toLowerCase().includes(q));
+    const q = query.trim().toLowerCase();
+
+    this.conditionsService.searchCondition(q).subscribe({
+      next: (data) => {
+        this.searchResults = this.transformConditionsResponse(data);
+      },
+      error: (err) => {
+        console.log('Error fetching search results', err);
+      },
+    });
+  }
+
+  transformConditionsResponse(res: any) {
+    const list = res?.[3] ?? [];
+
+    return list.map(([name, details]: string[]) => ({
+      name,
+      details,
+    }));
   }
 
   selectCondition(condition: Condition) {
     this.selectedCondition = condition;
   }
 
-  private addCondition(condition: Condition) {}
+  private addCondition(condition: AddConditionPayload) {
+    this.conditionForm.disable();
+
+    this.conditionsService
+      .add(condition)
+      .pipe(
+        finalize(() => {
+          this.conditionForm.enable();
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.toastr.success(data.message ?? 'Condition added successfully.');
+            this.searchResults = [];
+            this.selectedCondition = null;
+            this.loadConditions();
+            this.conditionForm.reset({});
+          }
+        },
+        error: (error) => {
+          const message = error?.message || 'Failed to add condition.';
+          this.toastr.error(message);
+        },
+      });
+  }
 
   submit() {
-    if (this.mode === InputModeEnum.Search) {
-      if (!this.selectedCondition) return;
-
-      this.addCondition(this.selectedCondition);
-      this.selectedCondition = null;
-    }
-
     if (this.mode === InputModeEnum.Manual) {
       if (this.conditionForm.invalid) {
         this.conditionForm.markAllAsTouched();
         return;
       }
 
-      this.addCondition(this.conditionForm.value as Condition);
+      const payload: AddConditionPayload = {
+        name: this.conditionForm.value.name ?? '',
+        details: this.conditionForm.value.details ?? '',
+        status: 'active',
+      };
+
+      this.addCondition(payload);
     }
 
-    this.conditionForm.reset({});
-    this.searchResults = [];
+    if (this.mode === InputModeEnum.Search && this.selectedCondition) {
+      const payload: AddConditionPayload = {
+        name: this.selectedCondition.name ?? '',
+        details: this.selectedCondition.details ?? '',
+        status: 'active',
+      };
+
+      this.addCondition(payload);
+    }
   }
 
   applyFilter(query: string) {
@@ -122,21 +183,45 @@ export class Conditions {
   }
 
   openEditModal(cond: Condition) {
-    this.selectedCondition = cond;
     this.editConditionForm.patchValue(cond);
     const ref = this.modal.open('Edit Condition', this.editModalContent);
-
     ref.componentInstance.save.subscribe(() => {
       if (this.editConditionForm.invalid) {
+        this.editConditionForm.markAllAsTouched();
         return;
       }
-      ref.close();
+      this.editCondition(cond, ref);
     });
 
     ref.componentInstance.cancel.subscribe(() => {});
   }
 
-  openDeleteModal() {
+  private editCondition(condition: Condition, ref: any) {
+    const payload = {
+      name: this.editConditionForm.value.name ?? '',
+      details: this.editConditionForm.value.details ?? '',
+      status: condition.status ?? 'active',
+    };
+
+    ref.componentInstance.setLoading(true);
+
+    this.conditionsService.update(condition.id, payload).subscribe({
+      next: (data) => {
+        if (data.success) {
+          ref.componentInstance.setLoading(false);
+          ref.close();
+          this.toastr.success('Condition updated successfully.');
+          this.loadConditions();
+        }
+      },
+      error: () => {
+        ref.componentInstance.setLoading(false);
+        this.toastr.error('Failed to update condition.');
+      },
+    });
+  }
+
+  openDeleteModal(condition: Condition) {
     this.confirmService
       .open({
         title: 'Delete Condition',
@@ -145,16 +230,23 @@ export class Conditions {
       })
       .subscribe((result) => {
         if (result) {
+          this.deleteCondition(condition);
         }
       });
   }
-}
 
-const ALL_CONDITIONS: Condition[] = [
-  { name: 'Diabetes', details: 'Physical Health' },
-  { name: 'Hypertension', details: 'Chronic' },
-  { name: 'Asthma', details: 'Chronic' },
-  { name: 'Flu', details: 'Acute' },
-  { name: 'Depression', details: 'Mental Health' },
-  { name: 'Anxiety', details: 'Mental Health' },
-];
+  private deleteCondition(condition: Condition) {
+    this.conditionsService.delete(condition.id).subscribe({
+      next: (data) => {
+        if (data.success) {
+          this.toastr.success('Condition deleted successfully.');
+          this.loadConditions();
+        }
+      },
+      error: (error) => {
+        const message = error?.message ?? 'Failed to delete condition.';
+        this.toastr.error(message);
+      },
+    });
+  }
+}

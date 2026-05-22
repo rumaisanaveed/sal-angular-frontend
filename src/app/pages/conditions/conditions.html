@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="flex justify-end">
-        <button mat-flat-button color="primary">Save</button>
+        <button mat-flat-button color="primary" [disabled]="conditionForm.disabled">Save</button>
       </div>
     </form>
   </app-mode-switch-card>
@@ -72,9 +72,9 @@
     </div>
     <app-conditions-table
       [data]="dataSource"
-      [cols]="['name', 'details', 'actions']"
+      [cols]="['name', 'details', 'status', 'displayOnCard', 'actions']"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteModal()"
+      (onDelete)="openDeleteModal($event)"
     />
   </div>
 

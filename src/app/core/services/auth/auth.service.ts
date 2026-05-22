@@ -73,10 +73,6 @@ export class AuthService {
   // get and add - patients api url + /hospitals
   // update and delete - patients api url + /hospitals/hospitalId
 
-  // CONDITIONS
-  // get and add - patients api url + /medical-conditions
-  // update and delete - patients api url + /medical-conditions/conditionId
-
   // THERAPIES
   // get and add - patients api url + /therapies
   // update and delete - patients api url + /therapies/therapyId

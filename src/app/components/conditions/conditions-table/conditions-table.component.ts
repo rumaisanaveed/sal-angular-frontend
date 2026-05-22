@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { Condition } from '../../../core/interfaces/conditions';
 
 @Component({
   selector: 'app-conditions-table',
@@ -22,7 +23,7 @@ export class ConditionsTableComponent {
     this.onEdit.emit(medication);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(condition: Condition) {
+    this.onDelete.emit(condition);
   }
 }

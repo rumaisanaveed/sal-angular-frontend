@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { AddAllergyPayload, AllergiesResponse, ApiResponse } from '../../interfaces/allergies';
-import { ALLERGIES_API_URL } from '../tokens';
 import { Observable } from 'rxjs';
+import { ApiResponse, BaseApiResponse } from '../../interfaces';
+import { AddAllergyPayload, AllergiesListResponse } from '../../interfaces/allergies';
+import { ALLERGIES_API_URL } from '../tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +12,19 @@ export class AllergiesService {
   private http = inject(HttpClient);
   private apiUrl = `${inject(ALLERGIES_API_URL)}`;
 
-  getAll(): Observable<AllergiesResponse> {
-    return this.http.get<AllergiesResponse>(this.apiUrl);
+  getAll(): Observable<ApiResponse<AllergiesListResponse>> {
+    return this.http.get<ApiResponse<AllergiesListResponse>>(this.apiUrl);
   }
 
-  add(payload: AddAllergyPayload): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.apiUrl, payload);
+  add(payload: AddAllergyPayload): Observable<BaseApiResponse> {
+    return this.http.post<BaseApiResponse>(this.apiUrl, payload);
   }
 
-  update(id: string, payload: AddAllergyPayload): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.apiUrl}/${id}`, payload);
+  update(id: string, payload: AddAllergyPayload): Observable<BaseApiResponse> {
+    return this.http.put<BaseApiResponse>(`${this.apiUrl}/${id}`, payload);
   }
 
-  delete(id: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`);
+  delete(id: string): Observable<BaseApiResponse> {
+    return this.http.delete<BaseApiResponse>(`${this.apiUrl}/${id}`);
   }
 }

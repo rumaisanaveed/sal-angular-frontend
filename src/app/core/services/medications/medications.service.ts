@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { MEDICATIONS_API_URL } from '../tokens';
 import { Observable } from 'rxjs';
-import { AddMedicationPayload, MedicationsResponse } from '../../interfaces/medication';
-import { BaseApiResponse } from '../../interfaces';
+import { AddMedicationPayload, MedicationsListResponse } from '../../interfaces/medication';
+import { ApiResponse, BaseApiResponse } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,8 @@ export class MedicationsService {
   private http = inject(HttpClient);
   private apiUrl = `${inject(MEDICATIONS_API_URL)}`;
 
-  getAll(): Observable<MedicationsResponse> {
-    return this.http.get<MedicationsResponse>(this.apiUrl);
+  getAll(): Observable<ApiResponse<MedicationsListResponse>> {
+    return this.http.get<ApiResponse<MedicationsListResponse>>(this.apiUrl);
   }
 
   add(payload: AddMedicationPayload): Observable<BaseApiResponse> {

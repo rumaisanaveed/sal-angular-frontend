@@ -1,3 +1,5 @@
+import { Pagination } from '.';
+
 export interface Allergy {
   name: string;
   details: string;
@@ -12,22 +14,7 @@ export type AddAllergyPayload = {
   status: string;
 };
 
-export interface AllergiesResponse {
-  success: boolean;
-  message: string;
-  data: {
-    allergies: Allergy[];
-    pagination: {
-      currentPage: number;
-      totalPages: number;
-      totalAllergies: number;
-      hasNextPage: boolean;
-      hasPrevPage: boolean;
-    };
-  };
-}
-
-export interface ApiResponse {
-  success: boolean;
-  message: string;
+export interface AllergiesListResponse {
+  allergies: Allergy[];
+  pagination: Pagination;
 }

@@ -1,1 +1,37 @@
-<p>devices.component works!</p>
+<div class="p-2 min-h-screen">
+  <div
+    class="bg-white shadow-sm p-6 mb-6 border border-gray-200 max-w-md"
+    style="border-radius: 15px"
+  >
+    <h2 class="text-primary font-semibold text-xl md:text-2xl mb-4">Add New Device</h2>
+
+    <app-device-form [deviceForm]="deviceForm" (submit)="addDevice()">
+      <button mat-flat-button color="primary" class="w-fit" [disabled]="deviceForm.disabled">
+        Save
+      </button>
+    </app-device-form>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200" style="border-radius: 15px">
+    <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
+      <h2 class="text-primary font-semibold text-xl md:text-2xl">Devices</h2>
+      <app-search-bar (search)="applyFilter($event)"></app-search-bar>
+    </div>
+
+    <!-- Therapies Table -->
+    <app-device-table
+      [data]="dataSource"
+      [cols]="columns"
+      (onEdit)="openEditModal($event)"
+      (onDelete)="openDeleteConfirmationModal($event)"
+    />
+  </div>
+
+  <!-- Edit Device Modal -->
+  <ng-template #editModal>
+    <app-device-form [deviceForm]="editDeviceForm" />
+  </ng-template>
+
+  <!-- Delete Device Modal -->
+  <ng-template #deleteModal> </ng-template>
+</div>

@@ -117,7 +117,7 @@ export const THERAPIES_API_URL = new InjectionToken<string>('THERAPIES_API_URL',
 export const DEVICES_API_URL = new InjectionToken<string>('DEVICES_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/medical-devices`;
   },
 });

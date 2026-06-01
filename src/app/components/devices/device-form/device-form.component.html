@@ -1,0 +1,74 @@
+<form [formGroup]="deviceForm" class="flex flex-col gap-4 w-full">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="deviceName" placeholder="Device name" class="text-sm! h-4!" />
+  </mat-form-field>
+  <small
+    *ngIf="deviceForm.get('deviceName')?.invalid && deviceForm.get('deviceName')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea
+      [rows]="10"
+      matInput
+      formControlName="description"
+      placeholder="Description"
+      class="text-sm!"
+    ></textarea>
+  </mat-form-field>
+  <small
+    *ngIf="deviceForm.get('description')?.invalid && deviceForm.get('description')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Device Type</mat-label>
+    <input
+      matInput
+      formControlName="deviceType"
+      placeholder="e.g; Monitoring device, Implant etc"
+      class="text-sm! h-4!"
+    />
+  </mat-form-field>
+  <small
+    *ngIf="deviceForm.get('deviceType')?.invalid && deviceForm.get('deviceType')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Brand</mat-label>
+    <input
+      matInput
+      formControlName="brand"
+      placeholder="e.g; Omron, Medtronic etc"
+      class="text-sm! h-4!"
+    />
+  </mat-form-field>
+  <small
+    *ngIf="deviceForm.get('brand')?.invalid && deviceForm.get('brand')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Model</mat-label>
+    <input matInput formControlName="model" placeholder="e.g; BP742N" class="text-sm! h-4!" />
+  </mat-form-field>
+  <small
+    *ngIf="deviceForm.get('model')?.invalid && deviceForm.get('model')?.touched"
+    class="error-text"
+  >
+    This field is required
+  </small>
+
+  <ng-content></ng-content>
+</form>

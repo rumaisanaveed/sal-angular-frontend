@@ -6,10 +6,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { ProceduresTableComponent } from '../../components/procedures/procedures-table/procedures-table.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
-import { Procedure } from '../../core/interfaces/procedures';
+import { AddProcedurePayload, Procedure } from '../../core/interfaces/procedures';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { ModalService } from '../../core/services/modal-service/modal.service';
 import { MatButtonModule } from '@angular/material/button';
+import { ProceduresService } from '../../core/services/procedures/procedures.service';
+import { finalize } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-procedures',
@@ -26,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './procedures.css',
 })
 export class Procedures {
-  dataSource = new MatTableDataSource<Procedure>(PROCEDURES_DATA);
+  dataSource = new MatTableDataSource<Procedure>([]);
 
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
   selectedProcedure: Procedure | null = null;
@@ -43,23 +46,40 @@ export class Procedures {
 
   private fb = inject(FormBuilder);
   private modal = inject(ModalService);
+  private proceduresService = inject(ProceduresService);
   private confirmService = inject(ConfirmationModalService);
+  private toastr = inject(ToastrService);
 
   procedureForm = this.fb.group({
-    name: ['', Validators.required],
-    type: ['', Validators.required],
-    code: ['', Validators.required],
-    date: ['', Validators.required],
-    details: ['', Validators.required],
+    procedureName: ['', Validators.required],
+    procedureType: ['', Validators.required],
+    medicalCode: ['', Validators.required],
+    procedureDate: ['', Validators.required],
+    description: ['', Validators.required],
   });
 
   editProcedureForm = this.fb.group({
-    name: ['', Validators.required],
-    type: ['', Validators.required],
-    code: ['', Validators.required],
-    date: ['', Validators.required],
-    details: ['', Validators.required],
+    procedureName: ['', Validators.required],
+    procedureType: ['', Validators.required],
+    medicalCode: ['', Validators.required],
+    procedureDate: ['', Validators.required],
+    description: ['', Validators.required],
   });
+
+  ngOnInit(): void {
+    this.loadProcedures();
+  }
+
+  private loadProcedures() {
+    this.proceduresService.getAll().subscribe({
+      next: (res) => {
+        this.dataSource.data = res.data;
+      },
+      error: (err) => {
+        console.log('Error fetching allergies', err);
+      },
+    });
+  }
 
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
@@ -74,17 +94,63 @@ export class Procedures {
       if (this.editProcedureForm.invalid) {
         return;
       }
-      ref.close();
+      this.editProcedure(procedure, ref);
     });
 
     ref.componentInstance.cancel.subscribe(() => {});
   }
 
-  openDeleteModal() {
-    this.confirmService.open({
-      title: 'Delete Procedure',
-      description: 'Are you sure you want to delete this procedure?',
-      type: 'danger',
+  editProcedure(procedure: Procedure, ref: any) {
+    const formValues = this.editProcedureForm.value;
+    const payload: AddProcedurePayload = {
+      procedureName: formValues.procedureName ?? '',
+      procedureType: formValues.procedureType ?? '',
+      procedureDate: formValues.procedureDate ?? '',
+      medicalCode: formValues.medicalCode ?? '',
+      description: formValues.description ?? '',
+    };
+
+    ref.componentInstance.setLoading(true);
+
+    this.proceduresService.update(procedure._id, payload).subscribe({
+      next: (data) => {
+        if (data.success) {
+          ref.componentInstance.setLoading(false);
+          this.toastr.success('Procedure Updated successfully.');
+          this.loadProcedures();
+          ref.close();
+        }
+      },
+      error: () => {
+        ref.componentInstance.setLoading(false);
+        this.toastr.error('Failed to update procedure.');
+      },
+    });
+  }
+
+  openDeleteModal(procedure: Procedure) {
+    this.confirmService
+      .open({
+        title: 'Delete Procedure',
+        description: 'Are you sure you want to delete this procedure?',
+        type: 'danger',
+      })
+      .subscribe((result) => {
+        if (result) this.deleteProcedure(procedure);
+      });
+  }
+
+  private deleteProcedure(procedure: Procedure) {
+    this.proceduresService.delete(procedure._id).subscribe({
+      next: (data) => {
+        if (data.success) {
+          this.toastr.success('Procedure deleted successfully.');
+          this.loadProcedures();
+        }
+      },
+      error: () => {
+        this.toastr.error('Failed to delete procedure');
+      },
     });
   }
 
@@ -93,64 +159,38 @@ export class Procedures {
       this.procedureForm.markAllAsTouched();
       return;
     }
+
+    const formValues = this.procedureForm.value;
+
+    const payload: AddProcedurePayload = {
+      procedureName: formValues.procedureName ?? '',
+      procedureType: formValues.procedureType ?? '',
+      procedureDate: formValues.procedureDate ?? '',
+      medicalCode: formValues.medicalCode ?? '',
+      description: formValues.description ?? '',
+    };
+
+    this.procedureForm.disable();
+
+    this.proceduresService
+      .add(payload)
+      .pipe(
+        finalize(() => {
+          this.procedureForm.enable();
+        }),
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.message || 'Procedure added successfully.');
+            this.procedureForm.reset();
+            this.loadProcedures();
+          }
+        },
+        error: (err) => {
+          const message = err?.message || 'Failed to add procedure';
+          this.toastr.error(message);
+        },
+      });
   }
 }
-
-export const PROCEDURES_DATA: Procedure[] = [
-  {
-    name: 'Appendectomy',
-    type: 'surgical',
-    details: 'Surgical removal of the appendix',
-    code: 'PROC-001',
-    date: '2026-01-10',
-  },
-  {
-    name: 'Coronary Artery Bypass',
-    type: 'surgical',
-    details: 'Procedure to improve blood flow to the heart',
-    code: 'PROC-002',
-    date: '2026-02-05',
-  },
-  {
-    name: 'Cataract Surgery',
-    type: 'surgical',
-    details: 'Removal of the eye lens and replacement with artificial lens',
-    code: 'PROC-003',
-    date: '2026-03-12',
-  },
-  {
-    name: 'Knee Replacement',
-    type: 'orthopedic',
-    details: 'Replacement of knee joint with prosthesis',
-    code: 'PROC-004',
-    date: '2026-03-25',
-  },
-  {
-    name: 'MRI Scan',
-    type: 'diagnostic',
-    details: 'Magnetic resonance imaging diagnostic procedure',
-    code: 'PROC-005',
-    date: '2026-04-02',
-  },
-  {
-    name: 'Colonoscopy',
-    type: 'diagnostic',
-    details: 'Examination of the colon using a flexible camera',
-    code: 'PROC-006',
-    date: '2026-04-18',
-  },
-  {
-    name: 'Blood Test',
-    type: 'laboratory',
-    details: 'Laboratory analysis of blood sample',
-    code: 'PROC-007',
-    date: '2026-04-22',
-  },
-  {
-    name: 'CT Scan',
-    type: 'diagnostic',
-    details: 'Computed tomography imaging procedure',
-    code: 'PROC-008',
-    date: '2026-05-01',
-  },
-];

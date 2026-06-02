@@ -1,47 +1,47 @@
 <div class="w-full overflow-x-auto md:overflow-visible">
   <table mat-table [dataSource]="data" class="min-w-175">
     <!-- Name -->
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="procedureName">
       <th mat-header-cell *matHeaderCellDef>Name</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.name }}
+        {{ element.procedureName }}
       </td>
     </ng-container>
 
     <!-- Type -->
-    <ng-container matColumnDef="type">
+    <ng-container matColumnDef="procedureType">
       <th mat-header-cell *matHeaderCellDef>Type</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.type }}
+        {{ element.procedureType }}
       </td>
     </ng-container>
 
     <!-- Code -->
-    <ng-container matColumnDef="code">
+    <ng-container matColumnDef="medicalCode">
       <th mat-header-cell *matHeaderCellDef>Code</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.code }}
+        {{ element.medicalCode }}
       </td>
     </ng-container>
 
     <!-- Date -->
-    <ng-container matColumnDef="date">
+    <ng-container matColumnDef="procedureDate">
       <th mat-header-cell *matHeaderCellDef>Date</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.date }}
+        {{ element.procedureDate }}
       </td>
     </ng-container>
 
     <!-- Details -->
-    <ng-container matColumnDef="details">
-      <th mat-header-cell *matHeaderCellDef>Details</th>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.details }}
+        {{ element.description }}
       </td>
     </ng-container>
 
@@ -54,7 +54,7 @@
           <mat-icon>edit</mat-icon>
         </button>
 
-        <button mat-icon-button class="text-red-500!" (click)="delete()">
+        <button mat-icon-button class="text-red-500!" (click)="delete(element)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

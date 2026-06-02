@@ -12,11 +12,14 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Procedure Name</mat-label>
-          <input matInput formControlName="name" placeholder="e.g. MRI Scan" />
+          <input matInput formControlName="procedureName" placeholder="e.g. MRI Scan" />
         </mat-form-field>
 
         <small
-          *ngIf="procedureForm.get('name')?.invalid && procedureForm.get('name')?.touched"
+          *ngIf="
+            procedureForm.get('procedureName')?.invalid &&
+            procedureForm.get('procedureName')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Name is required
@@ -27,14 +30,17 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Type</mat-label>
-          <mat-select formControlName="type">
+          <mat-select formControlName="procedureType">
             <mat-option *ngFor="let t of procedureTypes" [value]="t.value">
               {{ t.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <small
-          *ngIf="procedureForm.get('type')?.invalid && procedureForm.get('type')?.touched"
+          *ngIf="
+            procedureForm.get('procedureType')?.invalid &&
+            procedureForm.get('procedureType')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Type is required
@@ -45,10 +51,12 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Medical Code</mat-label>
-          <input matInput formControlName="code" placeholder="e.g. CPT / ICD code" />
+          <input matInput formControlName="medicalCode" placeholder="e.g. CPT / ICD code" />
         </mat-form-field>
         <small
-          *ngIf="procedureForm.get('code')?.invalid && procedureForm.get('code')?.touched"
+          *ngIf="
+            procedureForm.get('medicalCode')?.invalid && procedureForm.get('medicalCode')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Code is required
@@ -59,10 +67,13 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Date</mat-label>
-          <input matInput type="date" formControlName="date" />
+          <input matInput type="date" formControlName="procedureDate" />
         </mat-form-field>
         <small
-          *ngIf="procedureForm.get('date')?.invalid && procedureForm.get('date')?.touched"
+          *ngIf="
+            procedureForm.get('procedureDate')?.invalid &&
+            procedureForm.get('procedureDate')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Date is required
@@ -76,12 +87,14 @@
           <textarea
             matInput
             rows="4"
-            formControlName="details"
+            formControlName="description"
             placeholder="Additional notes..."
           ></textarea>
         </mat-form-field>
         <small
-          *ngIf="procedureForm.get('details')?.invalid && procedureForm.get('details')?.touched"
+          *ngIf="
+            procedureForm.get('description')?.invalid && procedureForm.get('description')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Details are required
@@ -105,8 +118,15 @@
     <app-procedures-table
       [data]="dataSource"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteModal()"
-      [cols]="['name', 'type', 'code', 'date', 'details', 'actions']"
+      (onDelete)="openDeleteModal($event)"
+      [cols]="[
+        'procedureName',
+        'procedureType',
+        'medicalCode',
+        'procedureDate',
+        'description',
+        'actions',
+      ]"
     />
   </div>
 
@@ -117,11 +137,14 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Procedure Name</mat-label>
-          <input matInput formControlName="name" placeholder="e.g. MRI Scan" />
+          <input matInput formControlName="procedureName" placeholder="e.g. MRI Scan" />
         </mat-form-field>
 
         <small
-          *ngIf="editProcedureForm.get('name')?.invalid && editProcedureForm.get('name')?.touched"
+          *ngIf="
+            editProcedureForm.get('procedureName')?.invalid &&
+            editProcedureForm.get('procedureName')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Name is required
@@ -132,14 +155,17 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Type</mat-label>
-          <mat-select formControlName="type">
+          <mat-select formControlName="procedureType">
             <mat-option *ngFor="let t of procedureTypes" [value]="t.value">
               {{ t.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <small
-          *ngIf="editProcedureForm.get('type')?.invalid && editProcedureForm.get('type')?.touched"
+          *ngIf="
+            editProcedureForm.get('procedureType')?.invalid &&
+            editProcedureForm.get('procedureType')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Type is required
@@ -150,10 +176,13 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Medical Code</mat-label>
-          <input matInput formControlName="code" placeholder="e.g. CPT / ICD code" />
+          <input matInput formControlName="medicalCode" placeholder="e.g. CPT / ICD code" />
         </mat-form-field>
         <small
-          *ngIf="editProcedureForm.get('code')?.invalid && editProcedureForm.get('code')?.touched"
+          *ngIf="
+            editProcedureForm.get('medicalCode')?.invalid &&
+            editProcedureForm.get('medicalCode')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Code is required
@@ -164,10 +193,13 @@
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Date</mat-label>
-          <input matInput type="date" formControlName="date" />
+          <input matInput type="date" formControlName="procedureDate" />
         </mat-form-field>
         <small
-          *ngIf="editProcedureForm.get('date')?.invalid && editProcedureForm.get('date')?.touched"
+          *ngIf="
+            editProcedureForm.get('procedureDate')?.invalid &&
+            editProcedureForm.get('procedureDate')?.touched
+          "
           class="text-red-500 text-xs"
         >
           Date is required
@@ -181,13 +213,14 @@
           <textarea
             matInput
             rows="4"
-            formControlName="details"
+            formControlName="description"
             placeholder="Additional notes..."
           ></textarea>
         </mat-form-field>
         <small
           *ngIf="
-            editProcedureForm.get('details')?.invalid && editProcedureForm.get('details')?.touched
+            editProcedureForm.get('description')?.invalid &&
+            editProcedureForm.get('description')?.touched
           "
           class="text-red-500 text-xs"
         >

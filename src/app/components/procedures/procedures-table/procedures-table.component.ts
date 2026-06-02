@@ -21,7 +21,7 @@ export class ProceduresTableComponent {
     this.onEdit.emit(procedure);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(procedure: Procedure) {
+    this.onDelete.emit(procedure);
   }
 }

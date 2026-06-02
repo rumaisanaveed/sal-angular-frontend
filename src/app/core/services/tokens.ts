@@ -69,7 +69,7 @@ export const ALLERGIES_API_URL = new InjectionToken<string>('ALLERGIES_API_URL',
 export const PROCEDURES_API_URL = new InjectionToken<string>('PROCEDURES_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/medical-procedures`;
   },
 });

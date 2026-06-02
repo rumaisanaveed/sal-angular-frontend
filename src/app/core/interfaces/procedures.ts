@@ -1,7 +1,19 @@
+import { Pagination } from '.';
+
 export interface Procedure {
-  name: string;
-  type: string;
-  code: string;
-  date: string;
-  details: string;
+  _id: string;
+  procedureName: string;
+  description: string;
+  medicalCode: string;
+  procedureDate: string;
+  procedureType: string;
 }
+
+export interface ProceduresListResponse {
+  success: boolean;
+  message: string;
+  data: Procedure[];
+  pagination: Pagination;
+}
+
+export type AddProcedurePayload = Omit<Procedure, '_id'>;

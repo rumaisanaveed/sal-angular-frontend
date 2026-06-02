@@ -54,10 +54,6 @@ export class AuthService {
   // get profile info - patients api url + /profile
   // update profile info - patients api url + /profile
 
-  // PROCEDURES
-  // get and add - patients api url + /medical-procedures
-  // update and delete - patients api url + /medical-procedures/procedureId
-
   // FAMILY HISTORY
   // get and add - patients api url + /family-history
   // update and delete - patients api url + /family-history/id

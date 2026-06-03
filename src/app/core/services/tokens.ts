@@ -85,7 +85,7 @@ export const HISTORY_API_URL = new InjectionToken<string>('HISTORY_API_URL', {
 export const DOCTORS_API_URL = new InjectionToken<string>('DOCTORS_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/doctors`;
   },
 });

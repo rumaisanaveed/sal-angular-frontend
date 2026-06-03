@@ -61,10 +61,6 @@ export class AuthService {
   // LIFESTYLE
   // get and update - patients api url + /lifestyle
 
-  // DOCTORS
-  // get and add - patients api url + /doctors
-  // update and delete - patients api url + /doctors/doctorId
-
   // HOSPITALS
   // get and add - patients api url + /hospitals
   // update and delete - patients api url + /hospitals/hospitalId

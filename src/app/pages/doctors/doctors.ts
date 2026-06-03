@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -15,6 +15,9 @@ import { InputModeEnum } from '../../core/constants';
 import { Doctor, DoctorsList } from '../../core/interfaces/doctors';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { ModalService } from '../../core/services/modal-service/modal.service';
+import { DoctorsService } from '../../core/services/doctors/doctors.service';
+import { finalize } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-doctors',
@@ -36,13 +39,15 @@ import { ModalService } from '../../core/services/modal-service/modal.service';
   styleUrl: './doctors.css',
 })
 export class Doctors {
+  private doctorService = inject(DoctorsService);
+
   mode: InputModeEnum = InputModeEnum.Search;
 
   selectedDoctor: Doctor | null = null;
-  selectedDoctorType: 'main' | 'other' = 'other';
+  selectedDoctorType: 'current' | 'past' = 'current';
 
-  mainDoctors = new MatTableDataSource<DoctorsList>(MAIN_DOCTORS);
-  otherDoctors = new MatTableDataSource<DoctorsList>(OTHER_DOCTORS);
+  mainDoctors = new MatTableDataSource<DoctorsList>([]);
+  otherDoctors = new MatTableDataSource<DoctorsList>([]);
 
   columns = ['name', 'speciality', 'actions'];
 
@@ -63,42 +68,15 @@ export class Doctors {
     { label: 'Credential', key: 'credential' },
   ];
 
-  searchResults: Doctor[] = [
-    {
-      name: 'Dr. John Smith',
-      speciality: 'Cardiology',
-      service: 'Cardiology',
-      phone: '123-456-7890',
-      city: 'New York',
-      address: '123 Main St',
-      gender: 'male',
-      email: 'john.smith@example.com',
-    },
-    {
-      name: 'Dr. Sarah Johnson',
-      speciality: 'Neurology',
-      service: 'Neurology',
-      phone: '987-654-3210',
-      city: 'Los Angeles',
-      address: '456 Sunset Blvd',
-      gender: 'female',
-    },
-    {
-      name: 'Dr. Ali Khan',
-      speciality: 'Orthopedics',
-      service: 'Orthopedics',
-      phone: '0300-1234567',
-      city: 'Karachi',
-      address: 'Clifton Block 5',
-      gender: 'male',
-    },
-  ];
+  searchResults: Doctor[] = [];
 
   allDoctors = [...this.searchResults];
 
   private fb = inject(FormBuilder);
   private modal = inject(ModalService);
   private confirmService = inject(ConfirmationModalService);
+  private cdr = inject(ChangeDetectorRef);
+  private toastr = inject(ToastrService);
 
   doctorForm = this.fb.group({
     name: ['', Validators.required],
@@ -124,6 +102,30 @@ export class Doctors {
     status: ['', Validators.required],
   });
 
+  ngOnInit(): void {
+    this.loadDoctors();
+  }
+
+  loadDoctors() {
+    this.doctorService.getAll().subscribe({
+      next: (res) => {
+        const doctors: DoctorsList[] = res.data.map((doctor: any) => ({
+          name: doctor.name,
+          speciality: doctor.specialization,
+          status: doctor.status,
+          id: doctor.id,
+        }));
+
+        this.mainDoctors.data = doctors.filter((doctor) => doctor.status === 'current');
+
+        this.otherDoctors.data = doctors.filter((doctor) => doctor.status === 'past');
+      },
+      error: (err) => {
+        console.log('Error fetching doctors', err);
+      },
+    });
+  }
+
   selectDoctor(doc: Doctor) {
     const mapped: Doctor = {
       name: doc.name || '',
@@ -138,21 +140,92 @@ export class Doctors {
     this.selectedDoctor = mapped;
   }
 
-  addDoctor() {
-    this.doctorForm.markAllAsTouched();
+  submit() {
+    if (this.mode === 'manual') {
+      if (this.doctorForm.invalid) {
+        this.doctorForm.markAllAsTouched();
+        return;
+      }
 
-    if (this.doctorForm.invalid) return;
+      // this.addDoctor();
+    }
+
+    if (this.mode === 'search' && this.selectedDoctor) {
+      const payload = {
+        ...this.selectedDoctor,
+        doctorName: this.selectedDoctor.name,
+        specialityDetails: this.selectedDoctor.speciality,
+        role: this.selectedDoctor.service ?? '',
+        status: this.selectedDoctorType ?? 'current',
+      };
+
+      this.addDoctor(payload);
+    }
+  }
+
+  private addDoctor(payload: Doctor) {
+    this.doctorForm.disable();
+
+    this.doctorService
+      .add(payload)
+      .pipe(
+        finalize(() => {
+          this.doctorForm.enable();
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.toastr.success(data?.message ?? 'Doctor addedd successfully.');
+            this.searchResults = [];
+            this.selectedDoctor = null;
+            this.loadDoctors();
+            this.doctorForm.reset({});
+          }
+        },
+        error: (err) => {
+          const message = err?.message || 'Failed to add doctor.';
+          this.toastr.error(message);
+        },
+      });
   }
 
   searchDoctors(value: string) {
-    const v = value.toLowerCase();
+    if (!value.trim()) {
+      this.searchResults = [];
+      this.selectedDoctor = null;
+      return;
+    }
 
-    this.searchResults = this.allDoctors.filter(
-      (d) =>
-        d.name.toLowerCase().includes(v) ||
-        d.speciality?.toLowerCase().includes(v) ||
-        d.city?.toLowerCase().includes(v),
-    );
+    if (value.trim().length < 3) {
+      return;
+    }
+
+    this.doctorService.searchDoctor(value.trim()).subscribe({
+      next: (data) => {
+        this.searchResults = this.transformSearchResponse(data);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Error getting search results', err);
+      },
+    });
+  }
+
+  private transformSearchResponse(data: any) {
+    const providers = data[3] || [];
+
+    return providers.map((item: string[]) => ({
+      name: item[1],
+      speciality: item[2],
+      service: item[2],
+      credential: item[4] || '',
+      address: item[5],
+      phone: item[6],
+      city: item[7],
+      state: item[8],
+      gender: item[3] === 'M' ? 'male' : 'female',
+    }));
   }
 
   openEditModal(doctor: DoctorsList) {

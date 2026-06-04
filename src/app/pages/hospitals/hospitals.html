@@ -25,10 +25,29 @@
             }"
           />
         }
+
+        <!-- Main/Other -->
+        <div class="pt-3 border-t border-blue-200" *ngIf="selectedHospital">
+          <p class="text-sm font-medium text-gray-700 mb-2">Assign Doctor Type</p>
+
+          <mat-radio-group [(ngModel)]="selectedHospitalType" class="flex gap-4">
+            <mat-radio-button value="active">Main Hospital</mat-radio-button>
+            <mat-radio-button value="inactive">Past Hospital</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2" *ngIf="selectedHospital">
+        <button mat-flat-button color="primary" (click)="submit()">Add</button>
       </div>
 
       <!-- Manual Mode -->
-      <form *ngIf="mode === 'manual'" class="space-y-4" [formGroup]="hospitalForm">
+      <form
+        *ngIf="mode === 'manual'"
+        class="space-y-4"
+        [formGroup]="hospitalForm"
+        (ngSubmit)="submit()"
+      >
         <div class="space-y-4 overflow-y-auto max-h-[225px]">
           <!-- Name -->
           <div>
@@ -39,24 +58,6 @@
 
             <small
               *ngIf="hospitalForm.get('name')?.invalid && hospitalForm.get('name')?.touched"
-              class="error-text pt-1 block"
-            >
-              This field is required
-            </small>
-          </div>
-
-          <!-- Service -->
-          <div>
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Service Provided</mat-label>
-              <mat-select formControlName="service">
-                <mat-option *ngFor="let service of services" [value]="service.value">
-                  {{ service.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <small
-              *ngIf="hospitalForm.get('service')?.invalid && hospitalForm.get('service')?.touched"
               class="error-text pt-1 block"
             >
               This field is required
@@ -156,27 +157,27 @@
   <div class="lg:col-span-3 space-y-6">
     <!-- Current Hospitals -->
     <div class="bg-white rounded-xl shadow-sm p-6">
-      <h2 class="text-lg font-semibold mb-4">Main Doctors</h2>
+      <h2 class="text-lg font-semibold mb-4">Main Hospitals</h2>
 
       <app-hospitals-table
         [data]="currentHospitals"
         [cols]="columns"
         (onEdit)="openEditModal($event)"
-        (onDelete)="openDeleteModal()"
+        (onDelete)="openDeleteModal($event)"
       ></app-hospitals-table>
     </div>
   </div>
 
   <!-- Past Hospitals -->
   <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-5">
-    <h2 class="text-lg font-semibold mb-4">Other Doctors</h2>
+    <h2 class="text-lg font-semibold mb-4">Other Hospitals</h2>
 
     <app-hospitals-table
       class="w-full"
       [data]="pastHospitals"
       [cols]="columns"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteModal()"
+      (onDelete)="openDeleteModal($event)"
     ></app-hospitals-table>
   </div>
 
@@ -197,20 +198,14 @@
         </small>
       </div>
 
-      <!-- Service -->
-      <div>
+      <!-- Npi Num -->
+      <div class="w-full">
         <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Service Provided</mat-label>
-          <mat-select formControlName="service">
-            <mat-option *ngFor="let service of services" [value]="service.value">
-              {{ service.label }}
-            </mat-option>
-          </mat-select>
+          <mat-label>Npi Number</mat-label>
+          <input matInput formControlName="npiNumber" type="number" />
         </mat-form-field>
         <small
-          *ngIf="
-            editHospitalForm.get('service')?.invalid && editHospitalForm.get('service')?.touched
-          "
+          *ngIf="hospitalForm.get('npiNumber')?.invalid && hospitalForm.get('npiNumber')?.touched"
           class="error-text pt-1 block"
         >
           This field is required

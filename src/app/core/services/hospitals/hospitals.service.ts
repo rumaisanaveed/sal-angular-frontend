@@ -26,7 +26,7 @@ export class HospitalsService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  searchDoctor(searchTerm: string) {
+  searchHospital(searchTerm: string) {
     const url = `https://clinicaltables.nlm.nih.gov/api/npi_org/v3/search?terms=${encodeURIComponent(
       searchTerm,
     )}&count=10&df=NPI,name.full,provider_type,addr_practice.full,addr_practice.phone`;

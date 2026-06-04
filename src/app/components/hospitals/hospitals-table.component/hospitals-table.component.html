@@ -9,12 +9,12 @@
       </td>
     </ng-container>
 
-    <!-- Service -->
-    <ng-container matColumnDef="service">
-      <th mat-header-cell *matHeaderCellDef>Service</th>
+    <!-- Npi Number -->
+    <ng-container matColumnDef="npiNumber">
+      <th mat-header-cell *matHeaderCellDef>Npi Number</th>
 
       <td mat-cell *matCellDef="let element" class="font-normal text-sm text-gray-700">
-        {{ element.service }}
+        {{ element.npiNumber }}
       </td>
     </ng-container>
 
@@ -36,7 +36,7 @@
           <mat-icon>edit</mat-icon>
         </button>
 
-        <button mat-icon-button class="text-red-500!" (click)="delete()">
+        <button mat-icon-button class="text-red-500!" (click)="delete(element)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

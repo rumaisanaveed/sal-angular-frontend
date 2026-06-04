@@ -21,7 +21,7 @@ export class HospitalsTableComponent {
     this.onEdit.emit(hospital);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(hospital: Hospital) {
+    this.onDelete.emit(hospital);
   }
 }

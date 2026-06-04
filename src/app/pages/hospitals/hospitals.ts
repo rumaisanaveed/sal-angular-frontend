@@ -117,6 +117,7 @@ export class Hospitals {
             speciality: hosp.speciality,
             _id: hosp._id,
             status: hosp.status,
+            phone: '',
           }));
 
           this.currentHospitals.data = hospitals.filter((hosp) => hosp.status === 'active');

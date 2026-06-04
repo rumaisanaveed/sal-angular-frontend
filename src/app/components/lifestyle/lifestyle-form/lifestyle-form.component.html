@@ -98,6 +98,8 @@
 
   <!-- ACTION -->
   <div class="flex justify-end">
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
+    <button mat-flat-button color="primary" [disabled]="form.disabled" (click)="save()">
+      Save
+    </button>
   </div>
 </form>

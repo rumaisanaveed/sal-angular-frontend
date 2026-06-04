@@ -57,21 +57,4 @@ export class AuthService {
   // FAMILY HISTORY
   // get and add - patients api url + /family-history
   // update and delete - patients api url + /family-history/id
-
-  // LIFESTYLE
-  // get and update - patients api url + /lifestyle
-
-  // HOSPITALS
-  // get and add - patients api url + /hospitals
-  // update and delete - patients api url + /hospitals/hospitalId
-
-  // THERAPIES
-  // get and add - patients api url + /therapies
-  // update and delete - patients api url + /therapies/therapyId
-
-  // DEVICES
-  // get and add - patients api url + /medical-devices
-  // update and delete - patients api url + /medical-devices/deviceId
-
-  // INSURANCE
 }

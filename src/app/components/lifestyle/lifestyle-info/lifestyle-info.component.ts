@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Lifestyle, SectionEnum } from '../../../core/interfaces/lifestyle';
+import { LifeStyleData, SectionEnum } from '../../../core/interfaces/lifestyle';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './lifestyle-info.component.css',
 })
 export class LifestyleInfoComponent {
-  @Input() data!: Lifestyle;
+  @Input() data!: LifeStyleData;
   SectionEnum = SectionEnum;
 
   @Output() onEditSection = new EventEmitter();

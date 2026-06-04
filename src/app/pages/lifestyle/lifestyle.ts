@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { LifestyleInfoComponent } from '../../components/lifestyle/lifestyle-info/lifestyle-info.component';
 import { LifestyleFormComponent } from '../../components/lifestyle/lifestyle-form/lifestyle-form.component';
-import { SectionEnum } from '../../core/interfaces/lifestyle';
+import { LifestyleInfoComponent } from '../../components/lifestyle/lifestyle-info/lifestyle-info.component';
+import { LifeStyleData, SectionEnum } from '../../core/interfaces/lifestyle';
+import { LifestyleService } from '../../core/services/lifestyle/lifestyle.service';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-lifestyle',
@@ -26,6 +29,27 @@ export class Lifestyle {
   activeSection: SectionEnum = SectionEnum.Lifestyle;
 
   private fb = inject(FormBuilder);
+  private lifestyleService = inject(LifestyleService);
+  private toastr = inject(ToastrService);
+
+  lifestyleData: LifeStyleData = {};
+
+  ngOnInit(): void {
+    this.getLifeStyleData();
+  }
+
+  private getLifeStyleData() {
+    this.lifestyleService.get().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.lifestyleData = res.data;
+        }
+      },
+      error: (err) => {
+        console.log('Error getting lifestyle data', err);
+      },
+    });
+  }
 
   lifestyleForm = this.fb.group({
     // Lifestyle
@@ -45,29 +69,32 @@ export class Lifestyle {
     exercise: [''],
   });
 
-  lifestyleData = {
-    // Lifestyle Information
-    religion: 'Orthodox',
-    worship: 'Church',
-    worshipName: 'St. Mary Orthodox Church',
-    worshipAddress: '12 Church Street, New York',
-
-    // Work & Home
-    maritalStatus: 'Married',
-    workStatus: 'Employed',
-    education: 'Bachelor’s Degree',
-    occupation: 'Software Engineer',
-
-    // Exercise & Diet
-    diet: 'Balanced Diet',
-    exercise: '3-4 times per week',
-  };
-
   editSection(section: SectionEnum) {
     this.activeSection = section;
   }
 
   save() {
-    console.log(this.lifestyleForm.value);
+    const payload = this.lifestyleForm.value;
+
+    this.lifestyleForm.disable();
+
+    this.lifestyleService
+      .update(payload)
+      .pipe(finalize(() => this.lifestyleForm.enable()))
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            const message = res?.message || 'Lifestyle info updated successfully.';
+            this.toastr.success(message);
+            this.getLifeStyleData();
+          }
+        },
+        error: (err) => {
+          if (!err?.error?.success) {
+            const message = err?.error?.message || 'Failed to update lifestyle info.';
+            this.toastr.error(message);
+          }
+        },
+      });
   }
 }

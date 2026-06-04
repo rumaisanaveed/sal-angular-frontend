@@ -1,4 +1,4 @@
-export interface Lifestyle {
+export interface LifeStyleData {
   religion?: string;
   worship?: string;
   worshipName?: string;

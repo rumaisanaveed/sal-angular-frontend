@@ -22,7 +22,7 @@ export class DoctorsTableComponent {
     this.onEdit.emit(doctor);
   }
 
-  delete() {
-    this.onDelete.emit();
+  delete(doctor: DoctorsList) {
+    this.onDelete.emit(doctor);
   }
 }

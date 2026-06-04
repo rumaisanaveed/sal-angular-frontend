@@ -190,7 +190,7 @@ export class Medications {
       },
       error: () => {
         ref.componentInstance.setLoading(false);
-        this.toastr.error('Failed to update allergy.');
+        this.toastr.error('Failed to update medication.');
       },
     });
   }

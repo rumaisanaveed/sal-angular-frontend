@@ -12,7 +12,7 @@ import { DoctorsTableComponent } from '../../components/doctors/doctors-table/do
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { InputModeEnum } from '../../core/constants';
-import { Doctor, DoctorsList } from '../../core/interfaces/doctors';
+import { AddDoctorPayload, Doctor, DoctorsList } from '../../core/interfaces/doctors';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { ModalService } from '../../core/services/modal-service/modal.service';
 import { DoctorsService } from '../../core/services/doctors/doctors.service';
@@ -113,7 +113,7 @@ export class Doctors {
           name: doctor.name,
           speciality: doctor.specialization,
           status: doctor.status,
-          id: doctor.id,
+          _id: doctor._id,
         }));
 
         this.mainDoctors.data = doctors.filter((doctor) => doctor.status === 'current');
@@ -135,6 +135,7 @@ export class Doctors {
       address: doc.address || '',
       speciality: doc.speciality || '',
       gender: doc.gender || '',
+      _id: doc._id,
     };
 
     this.selectedDoctor = mapped;
@@ -147,12 +148,20 @@ export class Doctors {
         return;
       }
 
-      // this.addDoctor();
+      const formValue = this.doctorForm.value;
+
+      const payload: AddDoctorPayload = {
+        doctorName: formValue.name ?? '',
+        specialityDetails: formValue.speciality ?? '',
+        role: formValue.service ?? '',
+        status: formValue.doctorType ?? 'current',
+      };
+
+      this.addDoctor(payload);
     }
 
     if (this.mode === 'search' && this.selectedDoctor) {
       const payload = {
-        ...this.selectedDoctor,
         doctorName: this.selectedDoctor.name,
         specialityDetails: this.selectedDoctor.speciality,
         role: this.selectedDoctor.service ?? '',
@@ -163,7 +172,7 @@ export class Doctors {
     }
   }
 
-  private addDoctor(payload: Doctor) {
+  private addDoctor(payload: AddDoctorPayload) {
     this.doctorForm.disable();
 
     this.doctorService
@@ -232,117 +241,70 @@ export class Doctors {
     this.editDoctorForm.patchValue(doctor);
     const ref = this.modal.open('Edit Doctor', this.editModalContent);
     ref.componentInstance.save.subscribe(() => {
-      this.editDoctorForm.markAllAsTouched();
+      if (this.editDoctorForm.invalid) {
+        this.editDoctorForm.markAllAsTouched();
+        return;
+      }
 
-      if (this.editDoctorForm.invalid) return;
-
-      ref.close();
+      this.editDoctor(doctor, ref);
     });
 
     ref.componentInstance.cancel.subscribe(() => {});
   }
 
-  openDeleteModal() {
-    this.confirmService.open({
-      title: 'Delete Doctor',
-      description: 'Are you sure you want to delete this doctor?',
-      type: 'danger',
+  private editDoctor(doctor: DoctorsList, ref: any) {
+    const formValue = this.editDoctorForm.value;
+
+    const payload: AddDoctorPayload = {
+      doctorName: formValue.name ?? '',
+      specialityDetails: formValue.speciality ?? '',
+      role: formValue.speciality ?? '',
+      status: formValue.status ?? 'current',
+    };
+
+    ref.componentInstance.setLoading(true);
+
+    this.doctorService.update(doctor._id, payload).subscribe({
+      next: (data) => {
+        if (data.success) {
+          ref.componentInstance.setLoading(false);
+          ref.close();
+          this.toastr.success('Doctor updated successfully.');
+          this.loadDoctors();
+        }
+      },
+      error: (err) => {
+        const msg = err?.message ?? 'Failed to update doctor.';
+        ref.componentInstance.setLoading(false);
+        this.toastr.error(msg);
+      },
+    });
+  }
+
+  openDeleteModal(doctor: DoctorsList) {
+    this.confirmService
+      .open({
+        title: 'Delete Doctor',
+        description: 'Are you sure you want to delete this doctor?',
+        type: 'danger',
+      })
+      .subscribe((result) => {
+        if (result) this.deleteDoctor(doctor);
+      });
+  }
+
+  private deleteDoctor(doctor: DoctorsList) {
+    this.doctorService.delete(doctor._id).subscribe({
+      next: (data) => {
+        if (data.success) {
+          this.toastr.success('Doctor deleted successfully.');
+          this.loadDoctors();
+        }
+      },
+      error: (error) => {
+        const message = error?.message ?? 'Failed to delete doctor.';
+        this.toastr.error(message);
+      },
     });
   }
 }
-
-const MAIN_DOCTORS: DoctorsList[] = [
-  {
-    name: 'Dr. Sarah Johnson',
-    speciality: 'Cardiology',
-    status: 'current',
-  },
-  {
-    name: 'Dr. Michael Brown',
-    speciality: 'Neurology',
-    status: 'current',
-  },
-  {
-    name: 'Dr. Emily Davis',
-    speciality: 'Pediatrics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-  {
-    name: 'Dr. James Wilson',
-    speciality: 'Orthopedics',
-    status: 'current',
-  },
-];
-
-const OTHER_DOCTORS: DoctorsList[] = [
-  {
-    name: 'Dr. Ali Khan',
-    speciality: 'General Practice',
-    status: 'past',
-  },
-  {
-    name: 'Dr. Olivia Martin',
-    speciality: 'Neurology',
-    status: 'past',
-  },
-  {
-    name: 'Dr. John Smith',
-    speciality: 'Cardiology',
-    status: 'past',
-  },
-  {
-    name: 'Dr. Sophia Lee',
-    speciality: 'Dermatology',
-    status: 'past',
-  },
-  {
-    name: 'Dr. David Miller',
-    speciality: 'Orthopedics',
-    status: 'past',
-  },
-  {
-    name: 'Dr. Sophia Lee',
-    speciality: 'Dermatology',
-    status: 'past',
-  },
-  {
-    name: 'Dr. David Miller',
-    speciality: 'Orthopedics',
-    status: 'past',
-  },
-  {
-    name: 'Dr. Sophia Lee',
-    speciality: 'Dermatology',
-    status: 'past',
-  },
-  {
-    name: 'Dr. David Miller',
-    speciality: 'Orthopedics',
-    status: 'past',
-  },
-];

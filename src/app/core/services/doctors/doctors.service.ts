@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DOCTORS_API_URL } from '../tokens';
+import { AddDoctorPayload } from '../../interfaces/doctors';
+import { BaseApiResponse } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +16,16 @@ export class DoctorsService {
     return this.http.get<any>(this.apiUrl);
   }
 
-  add(payload: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, payload);
+  add(payload: AddDoctorPayload): Observable<BaseApiResponse> {
+    return this.http.post<BaseApiResponse>(this.apiUrl, payload);
   }
 
-  update(id: string, payload: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, payload);
+  update(id: string, payload: AddDoctorPayload): Observable<BaseApiResponse> {
+    return this.http.put<BaseApiResponse>(`${this.apiUrl}/${id}`, payload);
   }
 
-  delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  delete(id: string): Observable<BaseApiResponse> {
+    return this.http.delete<BaseApiResponse>(`${this.apiUrl}/${id}`);
   }
 
   searchDoctor(searchTerm: string) {

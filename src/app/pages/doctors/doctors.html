@@ -73,7 +73,7 @@
         [data]="mainDoctors"
         [cols]="columns"
         (onEdit)="openEditModal($event)"
-        (onDelete)="openDeleteModal()"
+        (onDelete)="openDeleteModal($event)"
       ></app-doctors-table>
     </div>
   </div>
@@ -87,7 +87,7 @@
       [data]="otherDoctors"
       [cols]="columns"
       (onEdit)="openEditModal($event)"
-      (onDelete)="openDeleteModal()"
+      (onDelete)="openDeleteModal($event)"
     ></app-doctors-table>
   </div>
 

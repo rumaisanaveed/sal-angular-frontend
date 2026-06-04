@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { EmergencyContactsComponent } from '../emergency-contacts/emergency-contacts.component';
 import { UploadProfileImageComponent } from '../upload-profile-image.component/upload-profile-image.component';
 import { ImageUploadComponent } from '../../../image-upload.component/image-upload.component';
+import { FooterButtonsComponent } from '../../footer-buttons/footer-buttons.component';
 
 @Component({
   selector: 'app-profile-tab',
@@ -27,6 +28,7 @@ import { ImageUploadComponent } from '../../../image-upload.component/image-uplo
     EmergencyContactsComponent,
     UploadProfileImageComponent,
     ImageUploadComponent,
+    FooterButtonsComponent,
   ],
   templateUrl: './profile-tab.component.html',
   styleUrl: './profile-tab.component.css',

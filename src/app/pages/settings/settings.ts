@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AccountTabComponent } from '../../components/settings/account-tab/account-tab.component';
 import { ContactInfoTabComponent } from '../../components/settings/contact-info-tab/contact-info-tab.component';
 import { ProfileTabComponent } from '../../components/settings/profile-tab/profile-tab/profile-tab.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
@@ -17,6 +18,7 @@ import { ProfileTabComponent } from '../../components/settings/profile-tab/profi
     AccountTabComponent,
     ContactInfoTabComponent,
     ProfileTabComponent,
+    CommonModule,
   ],
   templateUrl: './settings.html',
   styleUrl: './settings.css',

@@ -41,11 +41,6 @@ export class AuthService {
   // CARD
   // get patient card - patients api url + /card
 
-  // ACCOUNT TAB
-  // get account details - patients api url + /account
-  // update account details - patients api url + /account
-  // change password - patients api url + /account/password
-
   // CONTACT INFO TAB
   // get contact info - patients api url + /contact
   // update contact info - patients api url + /contact

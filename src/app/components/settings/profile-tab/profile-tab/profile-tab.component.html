@@ -14,14 +14,14 @@
       <mat-form-field appearance="outline" class="w-full h-fit">
         <mat-label>Date of Birth</mat-label>
 
-        <input matInput [matDatepicker]="picker" formControlName="dob" />
+        <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
 
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <small *ngIf="profileForm.get('dob')?.errors?.['dob']" class="error-text">
+      <small *ngIf="profileForm.get('dateOfBirth')?.errors?.['dateOfBirth']" class="error-text">
         Date of birth is required.
       </small>
 
@@ -121,7 +121,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Smoker</mat-label>
 
-        <mat-select formControlName="smoker">
+        <mat-select formControlName="isSmoker">
           <mat-option *ngFor="let option of yesNoOptions" [value]="option.value">{{
             option.label
           }}</mat-option>
@@ -149,5 +149,9 @@
     [formGroup]="profileForm"
   />
 
-  <app-footer-buttons />
+  <app-footer-buttons
+    [isDisabled]="saving()"
+    (onSave)="updateProfile()"
+    (onCancel)="cancelFormSubmission()"
+  />
 </form>

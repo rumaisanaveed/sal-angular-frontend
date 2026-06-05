@@ -25,3 +25,30 @@ export interface ContactInfoResponse {
   receiveTextMessages: string;
   subscribeToNewsletter: string;
 }
+
+interface EmergencyContact {
+  name: string;
+  phone: string;
+  relation: string;
+}
+
+export interface ProfileInfoResponse {
+  dateOfBirth: string;
+  ekgUrl: string;
+  profilePicUrl: string;
+  height: string;
+  weight: string;
+  gender: string;
+  bloodType: string;
+  countryOfBirth: string;
+  organDonor: string;
+  nationality: string;
+  isSmoker: string;
+  emergencyContacts: EmergencyContact[];
+}
+
+export interface UploadImageApiResponse {
+  success: boolean;
+  message: string;
+  fileUrl: string;
+}

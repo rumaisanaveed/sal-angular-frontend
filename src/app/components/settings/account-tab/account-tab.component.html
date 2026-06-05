@@ -64,7 +64,11 @@
         </mat-form-field>
       </div>
 
-      <app-footer-buttons (onSave)="updatePassword()" [isDisabled]="saving()" />
+      <app-footer-buttons
+        (onSave)="updatePassword()"
+        [isDisabled]="saving()"
+        (onCancel)="cancelFormSubmission()"
+      />
     </form>
   </div>
 </div>

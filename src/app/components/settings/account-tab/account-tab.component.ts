@@ -133,4 +133,8 @@ export class AccountTabComponent implements OnInit {
         },
       });
   }
+
+  cancelFormSubmission() {
+    this.getAccountDetails();
+  }
 }

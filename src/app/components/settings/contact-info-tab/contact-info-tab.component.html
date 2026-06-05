@@ -83,7 +83,11 @@
         </div>
       </div>
 
-      <app-footer-buttons [isDisabled]="saving()" (onSave)="updateContactInfo()" />
+      <app-footer-buttons
+        [isDisabled]="saving()"
+        (onSave)="updateContactInfo()"
+        (onCancel)="cancelFormSubmission()"
+      />
     </form>
   </div>
 </div>

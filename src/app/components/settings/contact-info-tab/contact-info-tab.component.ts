@@ -95,4 +95,8 @@ export class ContactInfoTabComponent {
         },
       });
   }
+
+  cancelFormSubmission() {
+    this.getContactInfoData();
+  }
 }

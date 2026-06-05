@@ -45,7 +45,7 @@ export const CONTACT_INFO_API_URL = new InjectionToken<string>('CONTACT_INFO_API
 export const PROFILE_API_URL = new InjectionToken<string>('PROFILE_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/profile`;
   },
 });
@@ -127,5 +127,13 @@ export const LIFESTYLE_API_URL = new InjectionToken<string>('DEVICES_API_URL', {
   factory: () => {
     const api = inject(PATIENTS_API_URL);
     return `${api}/lifestyle`;
+  },
+});
+
+export const UPLOAD_FILE_API_URL = new InjectionToken<string>('UPLOAD_FILE_API_URL', {
+  providedIn: 'root',
+  factory: () => {
+    const api = inject(PATIENTS_API_URL);
+    return `${api}/upload/file`;
   },
 });

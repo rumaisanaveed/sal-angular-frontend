@@ -12,3 +12,16 @@ export interface AccountDetailsResponse {
 }
 
 export type AccountDetailsRequest = Pick<AccountDetailsResponse, 'fullName' | 'ssn'>;
+
+export interface ContactInfoResponse {
+  primaryPhoneNumber: string;
+  mobilePhone: string;
+  addressLine1: string;
+  city: string;
+  postalCode: string;
+  state: string;
+  country: string;
+  receiveEmailAlerts: string;
+  receiveTextMessages: string;
+  subscribeToNewsletter: string;
+}

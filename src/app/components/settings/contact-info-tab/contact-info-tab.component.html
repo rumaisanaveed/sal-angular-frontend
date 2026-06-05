@@ -7,7 +7,7 @@
       <p class="text-sm text-gray-500 mt-1">Update your phone numbers and address</p>
     </div>
 
-    <form class="space-y-8">
+    <form class="space-y-8" [formGroup]="contactInfoForm">
       <!-- PHONE -->
       <div>
         <h3 class="text-sm font-semibold text-primary mb-4">Phone Numbers</h3>
@@ -16,13 +16,13 @@
           <mat-form-field appearance="outline">
             <mat-label>Primary Phone</mat-label>
 
-            <input matInput placeholder="+1 (555) 000-0000" />
+            <input matInput formControlName="primaryPhoneNumber" placeholder="+1 (555) 000-0000" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Mobile Phone</mat-label>
 
-            <input matInput placeholder="+1 (555) 000-0000" />
+            <input matInput formControlName="mobilePhone" placeholder="+1 (555) 000-0000" />
           </mat-form-field>
         </div>
       </div>
@@ -35,31 +35,31 @@
           <mat-form-field appearance="outline" class="md:col-span-2">
             <mat-label>Address Line 1</mat-label>
 
-            <input matInput />
+            <input matInput formControlName="addressLine1" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>City</mat-label>
 
-            <input matInput />
+            <input matInput formControlName="city" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Postal Code</mat-label>
 
-            <input matInput />
+            <input matInput formControlName="postalCode" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>State</mat-label>
 
-            <input matInput />
+            <input matInput formControlName="state" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Country</mat-label>
 
-            <input matInput />
+            <input matInput formControlName="country" />
           </mat-form-field>
         </div>
       </div>
@@ -69,15 +69,21 @@
         <h3 class="text-sm font-semibold text-primary mb-4">Preferences</h3>
 
         <div class="flex flex-col gap-4">
-          <mat-slide-toggle color="primary"> Receive Email Alerts </mat-slide-toggle>
+          <mat-slide-toggle color="primary" formControlName="receiveEmailAlerts">
+            Receive Email Alerts
+          </mat-slide-toggle>
 
-          <mat-slide-toggle color="primary"> Receive Text Messages </mat-slide-toggle>
+          <mat-slide-toggle color="primary" formControlName="receiveTextMessages">
+            Receive Text Messages
+          </mat-slide-toggle>
 
-          <mat-slide-toggle color="primary"> Subscribe to Newsletter </mat-slide-toggle>
+          <mat-slide-toggle color="primary" formControlName="subscribeToNewsletter">
+            Subscribe to Newsletter
+          </mat-slide-toggle>
         </div>
       </div>
 
-      <app-footer-buttons />
+      <app-footer-buttons [isDisabled]="saving()" (onSave)="updateContactInfo()" />
     </form>
   </div>
 </div>

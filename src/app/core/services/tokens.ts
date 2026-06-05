@@ -37,7 +37,7 @@ export const ACCOUNT_API_URL = new InjectionToken<string>('ACCOUNT_API_URL', {
 export const CONTACT_INFO_API_URL = new InjectionToken<string>('CONTACT_INFO_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/contact`;
   },
 });

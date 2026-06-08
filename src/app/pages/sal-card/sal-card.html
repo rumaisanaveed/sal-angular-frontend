@@ -1,5 +1,11 @@
 <div class="max-w-5xl mx-auto">
-  <div>
-    <img [src]="qrCodeUrl" class="h-28 w-28" alt="qr code" />
-  </div>
+  @if (loading()) {
+    <div>
+      <h2>Loading...</h2>
+    </div>
+  } @else {
+    <div>
+      <img [src]="qrCodeUrl" class="h-28 w-28" alt="qr code" />
+    </div>
+  }
 </div>

@@ -21,7 +21,7 @@ export const PATIENTS_API_URL = new InjectionToken<string>('PATIENTS_API_URL', {
 export const QR_CODE_API_URL = new InjectionToken<string>('QR_CODE_API_URL', {
   providedIn: 'root',
   factory: () => {
-    const api = inject(API_URL);
+    const api = inject(PATIENTS_API_URL);
     return `${api}/qr-code`;
   },
 });

@@ -8,6 +8,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { VerifyOtpPayload } from '../../../core/interfaces/auth';
+import { QrCodeService } from '../../../core/services/qr-code/qr-code.service';
 
 @Component({
   selector: 'app-verify-otp-modal',
@@ -20,6 +21,7 @@ export class VerifyOtpModalComponent {
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
+  private qrCodeService = inject(QrCodeService);
 
   otp = new FormControl('');
 
@@ -70,8 +72,17 @@ export class VerifyOtpModalComponent {
         if (data.success) {
           this.toastr.success('OTP verified successfully');
 
-          this.dialogRef.close(true);
-          this.router.navigate(['/allergies']);
+          this.qrCodeService.generate().subscribe({
+            next: (res) => {
+              if (res.success) {
+                this.dialogRef.close(true);
+                this.router.navigate(['/allergies']);
+              }
+            },
+            error: (err) => {
+              console.log('Failed to generate qr code', err);
+            },
+          });
         }
       },
       error: (error) => {

@@ -92,6 +92,8 @@ export class SignupComponent {
       .subscribe({
         next: (data) => {
           if (data.success) {
+            localStorage.setItem('token', data?.token);
+            localStorage.setItem('user', JSON.stringify(data?.data));
             this.toastr.success(data.message ?? 'Patient registered successfully.');
             this.openOtpModal();
           }

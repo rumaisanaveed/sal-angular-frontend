@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { QrCodeService } from '../../core/services/qr-code/qr-code.service';
 
 @Component({
   selector: 'app-sal-card',
@@ -6,4 +7,25 @@ import { Component } from '@angular/core';
   templateUrl: './sal-card.html',
   styleUrl: './sal-card.css',
 })
-export class SalCard {}
+export class SalCard implements OnInit {
+  private qrCodeService = inject(QrCodeService);
+
+  qrCodeUrl: string = '';
+
+  ngOnInit(): void {
+    this.loadQrCode();
+  }
+
+  private loadQrCode() {
+    this.qrCodeService.get().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.qrCodeUrl = res.data?.qrCodeData;
+        }
+      },
+      error: (err) => {
+        console.log('Failed to get qr code', err);
+      },
+    });
+  }
+}

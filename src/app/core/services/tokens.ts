@@ -137,3 +137,11 @@ export const UPLOAD_FILE_API_URL = new InjectionToken<string>('UPLOAD_FILE_API_U
     return `${api}/upload/file`;
   },
 });
+
+export const PATIENT_CARD_API_URL = new InjectionToken<string>('PATIENT_CARD_API_URL', {
+  providedIn: 'root',
+  factory: () => {
+    const api = inject(PATIENTS_API_URL);
+    return `${api}/card`;
+  },
+});

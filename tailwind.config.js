@@ -1,9 +1,9 @@
 module.exports = {
-  content: ["./src/**/*.{html,ts}"],
+  content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       colors: {
-        primary: "#1E40AF",
+        primary: '#1E40AF',
       },
     },
   },

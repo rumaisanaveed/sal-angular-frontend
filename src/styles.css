@@ -2,6 +2,10 @@
 
 @import 'tailwindcss';
 
+@theme {
+  --breakpoint-xs: 430px;
+}
+
 .toast-container {
   z-index: 999999 !important;
 }

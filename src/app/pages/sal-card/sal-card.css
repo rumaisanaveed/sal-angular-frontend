@@ -1,0 +1,26 @@
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #medical-card,
+  #medical-card * {
+    visibility: visible;
+  }
+
+  #medical-card {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+}

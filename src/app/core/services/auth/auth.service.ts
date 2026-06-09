@@ -33,19 +33,4 @@ export class AuthService {
   resendOtp(): Observable<OtpResponse> {
     return this.http.post<OtpResponse>(`${this.apiUrl}/resend-otp`, {});
   }
-
-  // QR CODE
-  // qr code generation - patients api url + /qr-code
-  // fetch qr code - patients api url + /qr-code
-
-  // CARD
-  // get patient card - patients api url + /card
-
-  // PROFILE INFO TAB
-  // get profile info - patients api url + /profile
-  // update profile info - patients api url + /profile
-
-  // FAMILY HISTORY
-  // get and add - patients api url + /family-history
-  // update and delete - patients api url + /family-history/id
 }

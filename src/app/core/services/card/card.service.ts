@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PATIENT_CARD_API_URL } from '../tokens';
 import { ApiResponse } from '../../interfaces';
 import { ICard } from '../../interfaces/card';
+import { PATIENT_CARD_API_URL } from '../tokens';
 
 @Injectable({
   providedIn: 'root',

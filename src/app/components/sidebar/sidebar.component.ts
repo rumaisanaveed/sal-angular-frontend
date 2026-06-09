@@ -45,7 +45,6 @@ export class SidebarComponent {
       icon: 'directions_run',
       route: '/lifestyle',
     },
-    { label: 'History', icon: 'history', route: '/history' },
     { label: 'Insurance', icon: 'security', route: '/insurance' },
     { label: 'SAL Card', icon: 'credit_card', route: '/sal-card' },
     { label: 'Settings', icon: 'settings', route: '/settings' },

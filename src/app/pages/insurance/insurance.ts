@@ -15,6 +15,7 @@ import {
   PRIMARY_INSURANCE_PROVIDERS,
   SECONDARY_INSURANCE_PROVIDERS,
 } from '../../constants/insurance';
+import { InsuranceService } from '../../core/services/insurance/insurance.service';
 
 @Component({
   selector: 'app-insurance',
@@ -38,28 +39,9 @@ export class Insurance {
 
   editingSection: string | null = null;
 
-  insuranceData = {
-    primaryInsurance: 'BCBS',
-    primaryInsuranceLabel: 'Blue Cross Blue Shield',
-    primaryInsuranceState: 'California',
-    primaryInsuranceMemberId: 'PR-889234-XY',
+  private insuranceService = inject(InsuranceService);
 
-    secondaryInsurance: 'Aetna',
-    secondaryInsuranceLabel: 'Aetna Inc.',
-    secondaryInsuranceState: '',
-    secondaryInsuranceMemberId: 'SEC-112233',
-
-    lifeInsurance: 'NorthwesternMutual',
-    lifeInsuranceLabel: 'Northwestern Mutual Life Insurance Company',
-    lifeInsuranceMemberId: 'LIFE-992211',
-
-    disabilityInsurance: 'GuardianLife',
-    disabilityInsuranceLabel: 'Guardian Life Insurance Company of America',
-    disabilityInsuranceMemberId: 'DIS-112299',
-
-    policy:
-      'Patient has active medical coverage. Pre-authorizations required for specialist visits. Secondary insurance used for prescription coverage.',
-  };
+  insuranceData: any = {};
 
   primaryInsuranceProviders = PRIMARY_INSURANCE_PROVIDERS;
 
@@ -74,6 +56,81 @@ export class Insurance {
   ngOnInit(): void {
     this.initializeForm();
     this.setupBcbsListeners();
+    this.getInsurance();
+  }
+
+  private getInsurance(): void {
+    this.insuranceService.get().subscribe({
+      next: (res) => {
+        if (!res.success) return;
+
+        const data = res.data;
+
+        const primaryInsuranceValue = this.getInsuranceValue(
+          data.primaryInsurance,
+          this.primaryInsuranceProviders,
+        );
+
+        const secondaryInsuranceValue = this.getInsuranceValue(
+          data.secondaryInsurance,
+          this.secondaryInsuranceProviders,
+        );
+
+        const lifeInsuranceValue = this.getInsuranceValue(
+          data.lifeInsurance,
+          this.lifeInsuranceProviders,
+        );
+
+        const disabilityInsuranceValue = this.getInsuranceValue(
+          data.disabilityInsurance,
+          this.disabilityInsuranceProviders,
+        );
+
+        this.insuranceData = {
+          primaryInsurance: primaryInsuranceValue,
+          primaryInsuranceLabel: data.primaryInsurance,
+          primaryInsuranceState: data.primaryInsuranceState ?? '',
+          primaryInsuranceMemberId: data.primaryInsuranceMemberId ?? '',
+
+          secondaryInsurance: secondaryInsuranceValue,
+          secondaryInsuranceLabel: data.secondaryInsurance,
+          secondaryInsuranceState: data.secondaryInsuranceState ?? '',
+          secondaryInsuranceMemberId: data.secondaryInsuranceMemberId ?? '',
+
+          lifeInsurance: lifeInsuranceValue,
+          lifeInsuranceLabel: data.lifeInsurance,
+          lifeInsuranceMemberId: data.lifeInsuranceMemberId ?? '',
+
+          disabilityInsurance: disabilityInsuranceValue,
+          disabilityInsuranceLabel: data.disabilityInsurance,
+          disabilityInsuranceMemberId: data.disabilityInsuranceMemberId ?? '',
+
+          policy: data.policy ?? '',
+        };
+
+        this.insuranceForm.patchValue({
+          primaryInsurance: primaryInsuranceValue,
+          primaryInsuranceState: data.primaryInsuranceState,
+          primaryInsuranceMemberId: data.primaryInsuranceMemberId,
+
+          secondaryInsurance: secondaryInsuranceValue,
+          secondaryInsuranceState: data.secondaryInsuranceState,
+          secondaryInsuranceMemberId: data.secondaryInsuranceMemberId,
+
+          lifeInsurance: lifeInsuranceValue,
+          lifeInsuranceMemberId: data.lifeInsuranceMemberId,
+
+          disabilityInsurance: disabilityInsuranceValue,
+          disabilityInsuranceMemberId: data.disabilityInsuranceMemberId,
+
+          policy: data.policy,
+        });
+      },
+    });
+  }
+
+  private getInsuranceValue(label: string, providers: { value: string; label: string }[]): string {
+    return providers.find((p) => p.label === label)?.value ?? '';
   }
 
   initializeForm(): void {

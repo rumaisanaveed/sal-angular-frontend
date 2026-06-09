@@ -14,7 +14,7 @@
       <app-insurance-view-mode
         *ngIf="editingSection !== 'primary'"
         [data]="{
-          provider: insuranceData.primaryInsurance,
+          provider: insuranceData.primaryInsuranceLabel,
           state: insuranceData.primaryInsuranceState,
           memberId: insuranceData.primaryInsuranceMemberId,
           showState: insuranceData.primaryInsurance === 'BCBS',

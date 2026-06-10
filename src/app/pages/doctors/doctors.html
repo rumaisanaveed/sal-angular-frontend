@@ -47,7 +47,14 @@
 
           <!-- Add Button -->
           <div class="flex justify-end pt-2">
-            <button mat-flat-button color="primary" (click)="submit()">Add</button>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="doctorForm.disabled"
+              (click)="submit()"
+            >
+              Add
+            </button>
           </div>
         </div>
       </div>
@@ -55,7 +62,13 @@
       <!-- MANUAL MODE -->
       <app-doctor-form *ngIf="mode === 'manual'" [form]="doctorForm"
         ><div class="flex justify-end">
-          <button mat-flat-button type="submit" (click)="submit()" color="primary">
+          <button
+            mat-flat-button
+            type="submit"
+            [disabled]="doctorForm.disabled"
+            (click)="submit()"
+            color="primary"
+          >
             Save Doctor
           </button>
         </div></app-doctor-form

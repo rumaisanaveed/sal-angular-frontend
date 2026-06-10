@@ -166,7 +166,7 @@ export class TherapiesComponent {
           }
         },
         error: (err) => {
-          const message = err?.message || 'Failed to add therapy.';
+          const message = err?.error?.message || 'Failed to add therapy.';
           this.toastr.error(message);
         },
       });

@@ -170,7 +170,7 @@ export class DevicesComponent {
           }
         },
         error: (err) => {
-          const message = err?.message || 'Failed to add device.';
+          const message = err?.error?.message || 'Failed to add device.';
           this.toastr.error(message);
         },
       });

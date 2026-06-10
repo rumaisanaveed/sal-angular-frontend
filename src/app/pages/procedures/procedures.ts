@@ -188,7 +188,7 @@ export class Procedures {
           }
         },
         error: (err) => {
-          const message = err?.message || 'Failed to add procedure';
+          const message = err?.error?.message || 'Failed to add procedure';
           this.toastr.error(message);
         },
       });

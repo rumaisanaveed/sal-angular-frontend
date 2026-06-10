@@ -76,7 +76,6 @@ export class Hospitals {
 
   hospitalForm = this.fb.group({
     name: ['', Validators.required],
-    service: ['', Validators.required],
     address: ['', Validators.required],
     phone: ['', Validators.required],
     speciality: ['', Validators.required],

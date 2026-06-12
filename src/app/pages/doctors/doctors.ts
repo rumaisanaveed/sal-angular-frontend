@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { DoctorFormComponent } from '../../components/doctors/doctor-form/doctor-form.component';
 import { DoctorsTableComponent } from '../../components/doctors/doctors-table/doctors-table.component';
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
@@ -14,10 +16,8 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { InputModeEnum } from '../../core/constants';
 import { AddDoctorPayload, Doctor, DoctorsList } from '../../core/interfaces/doctors';
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
-import { ModalService } from '../../core/services/modal-service/modal.service';
 import { DoctorsService } from '../../core/services/doctors/doctors.service';
-import { finalize } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { ModalService } from '../../core/services/modal-service/modal.service';
 
 @Component({
   selector: 'app-doctors',
@@ -68,14 +68,14 @@ export class Doctors {
     { label: 'Credential', key: 'credential' },
   ];
 
-  searchResults: Doctor[] = [];
-
-  allDoctors = [...this.searchResults];
+  searchResults$ = new BehaviorSubject<Doctor[]>([]);
+  searchResults = this.searchResults$.asObservable();
+  searchTerm = '';
+  allDoctors = this.searchResults$.asObservable();
 
   private fb = inject(FormBuilder);
   private modal = inject(ModalService);
   private confirmService = inject(ConfirmationModalService);
-  private cdr = inject(ChangeDetectorRef);
   private toastr = inject(ToastrService);
 
   doctorForm = this.fb.group({
@@ -186,7 +186,8 @@ export class Doctors {
         next: (data) => {
           if (data.success) {
             this.toastr.success(data?.message ?? 'Doctor addedd successfully.');
-            this.searchResults = [];
+            this.searchResults$.next([]);
+            this.searchTerm = '';
             this.selectedDoctor = null;
             this.loadDoctors();
             this.doctorForm.reset({});
@@ -201,7 +202,7 @@ export class Doctors {
 
   searchDoctors(value: string) {
     if (!value.trim()) {
-      this.searchResults = [];
+      this.searchResults$.next([]);
       this.selectedDoctor = null;
       return;
     }
@@ -212,8 +213,8 @@ export class Doctors {
 
     this.doctorService.searchDoctor(value.trim()).subscribe({
       next: (data) => {
-        this.searchResults = this.transformSearchResponse(data);
-        this.cdr.detectChanges();
+        const results = this.transformSearchResponse(data);
+        this.searchResults$.next(results);
       },
       error: (err) => {
         console.log('Error getting search results', err);

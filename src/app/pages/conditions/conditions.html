@@ -6,12 +6,16 @@
     (modeChange)="switchMode($event)"
   >
     <div *ngIf="mode === 'search'" class="space-y-3">
-      <app-search-bar class="w-full mb-4" (search)="searchCondition($event)" />
+      <app-search-bar
+        class="w-full mb-4"
+        [(searchTerm)]="searchTerm"
+        (search)="searchCondition($event)"
+      />
 
       <!-- Search Results -->
 
       <app-selectable-list
-        [items]="searchResults"
+        [items]="(searchResults$ | async) ?? []"
         labelKey="name"
         subLabelKey="details"
         (onSelect)="selectCondition($event)"

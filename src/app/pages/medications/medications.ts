@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
@@ -57,7 +57,6 @@ export class Medications {
   private confirmService = inject(ConfirmationModalService);
   private medicationsService = inject(MedicationsService);
   private toastr = inject(ToastrService);
-  private cdr = inject(ChangeDetectorRef);
 
   searchResults$ = new BehaviorSubject<MedicationSearchResult[]>([]);
   selectedMedication: MedicationSearchResult | null = null;

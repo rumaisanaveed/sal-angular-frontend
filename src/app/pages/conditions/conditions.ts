@@ -15,7 +15,7 @@ import { ConfirmationModalService } from '../../core/services/confirmation-modal
 import { ModalService } from '../../core/services/modal-service/modal.service';
 import { ConditionsService } from '../../core/services/conditions/conditions.service';
 import { AddConditionPayload, Condition } from '../../core/interfaces/conditions';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -61,8 +61,9 @@ export class Conditions {
 
   @ViewChild('editModal') editModalContent!: TemplateRef<any>;
 
-  searchResults: Condition[] = [];
+  searchResults$ = new BehaviorSubject<Condition[]>([]);
   selectedCondition: Condition | null = null;
+  searchTerm = '';
 
   dataSource = new MatTableDataSource<Condition>([]);
 
@@ -86,12 +87,12 @@ export class Conditions {
   switchMode(mode: InputModeEnum) {
     this.mode = mode;
     this.selectedCondition = null;
-    this.searchResults = [];
+    this.searchResults$.next([]);
   }
 
   searchCondition(query: string) {
     if (!query.trim()) {
-      this.searchResults = [];
+      this.searchResults$.next([]);
       return;
     }
 
@@ -103,7 +104,8 @@ export class Conditions {
 
     this.conditionsService.searchCondition(q).subscribe({
       next: (data) => {
-        this.searchResults = this.transformConditionsResponse(data);
+        const results = this.transformConditionsResponse(data);
+        this.searchResults$.next(results);
       },
       error: (err) => {
         console.log('Error fetching search results', err);
@@ -138,7 +140,8 @@ export class Conditions {
         next: (data) => {
           if (data.success) {
             this.toastr.success(data.message ?? 'Condition added successfully.');
-            this.searchResults = [];
+            this.searchResults$.next([]);
+            this.searchTerm = '';
             this.selectedCondition = null;
             this.loadConditions();
             this.conditionForm.reset({});

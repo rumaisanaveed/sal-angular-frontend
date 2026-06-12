@@ -7,11 +7,18 @@
     >
       <!-- SEARCH MODE -->
       <div *ngIf="mode === 'search'" class="flex flex-col gap-6 max-h-[450px] overflow-y-auto">
-        <app-search-bar class="w-full" (search)="searchDoctors($event)"></app-search-bar>
+        <app-search-bar
+          class="w-full"
+          [(searchTerm)]="searchTerm"
+          (search)="searchDoctors($event)"
+        ></app-search-bar>
 
         <!-- Search Results -->
-        <div *ngIf="searchResults.length" class="border rounded-lg divide-y">
-          <div *ngFor="let doc of searchResults" class="p-4 flex justify-between items-start">
+        <div *ngIf="(searchResults | async)?.length" class="border rounded-lg divide-y">
+          <div
+            *ngFor="let doc of searchResults | async"
+            class="p-4 flex justify-between items-start"
+          >
             <div>
               <p class="font-medium text-gray-800">{{ doc.name }}</p>
               <p class="text-sm text-gray-500">

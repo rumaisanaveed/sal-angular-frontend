@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +16,8 @@ import {
   SECONDARY_INSURANCE_PROVIDERS,
 } from '../../constants/insurance';
 import { InsuranceService } from '../../core/services/insurance/insurance.service';
+import { ToastrService } from 'ngx-toastr';
+import { InsuranceRecord } from '../../core/interfaces/insurance';
 
 @Component({
   selector: 'app-insurance',
@@ -40,18 +42,17 @@ export class Insurance {
   editingSection: string | null = null;
 
   private insuranceService = inject(InsuranceService);
+  private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
-  insuranceData: any = {};
+  loading = signal(false);
+
+  insuranceData: Partial<InsuranceRecord> = {};
 
   primaryInsuranceProviders = PRIMARY_INSURANCE_PROVIDERS;
-
   secondaryInsuranceProviders = SECONDARY_INSURANCE_PROVIDERS;
-
   lifeInsuranceProviders = LIFE_INSURANCE_PROVIDERS;
-
   disabilityInsuranceProviders = DISABILITY_INSURANCE_PROVIDERS;
-
-  private fb = inject(FormBuilder);
 
   ngOnInit(): void {
     this.initializeForm();
@@ -60,131 +61,84 @@ export class Insurance {
   }
 
   private getInsurance(): void {
+    this.loading.set(true);
+
     this.insuranceService.get().subscribe({
       next: (res) => {
-        if (!res.success) return;
+        this.loading.set(false);
+        if (!res?.success) return;
 
         const data = res.data;
 
-        const primaryInsuranceValue = this.getInsuranceValue(
-          data.primaryInsurance,
-          this.primaryInsuranceProviders,
-        );
-
-        const secondaryInsuranceValue = this.getInsuranceValue(
-          data.secondaryInsurance,
-          this.secondaryInsuranceProviders,
-        );
-
-        const lifeInsuranceValue = this.getInsuranceValue(
-          data.lifeInsurance,
-          this.lifeInsuranceProviders,
-        );
-
-        const disabilityInsuranceValue = this.getInsuranceValue(
-          data.disabilityInsurance,
-          this.disabilityInsuranceProviders,
-        );
-
         this.insuranceData = {
-          primaryInsurance: primaryInsuranceValue,
-          primaryInsuranceLabel: data.primaryInsurance,
+          primaryInsurance: data.primaryInsurance ?? '',
           primaryInsuranceState: data.primaryInsuranceState ?? '',
           primaryInsuranceMemberId: data.primaryInsuranceMemberId ?? '',
 
-          secondaryInsurance: secondaryInsuranceValue,
-          secondaryInsuranceLabel: data.secondaryInsurance,
+          secondaryInsurance: data.secondaryInsurance ?? '',
           secondaryInsuranceState: data.secondaryInsuranceState ?? '',
           secondaryInsuranceMemberId: data.secondaryInsuranceMemberId ?? '',
 
-          lifeInsurance: lifeInsuranceValue,
-          lifeInsuranceLabel: data.lifeInsurance,
+          lifeInsurance: data.lifeInsurance ?? '',
           lifeInsuranceMemberId: data.lifeInsuranceMemberId ?? '',
 
-          disabilityInsurance: disabilityInsuranceValue,
-          disabilityInsuranceLabel: data.disabilityInsurance,
+          disabilityInsurance: data.disabilityInsurance ?? '',
           disabilityInsuranceMemberId: data.disabilityInsuranceMemberId ?? '',
 
           policy: data.policy ?? '',
         };
 
-        this.insuranceForm.patchValue({
-          primaryInsurance: primaryInsuranceValue,
-          primaryInsuranceState: data.primaryInsuranceState,
-          primaryInsuranceMemberId: data.primaryInsuranceMemberId,
+        this.patchForm();
+      },
 
-          secondaryInsurance: secondaryInsuranceValue,
-          secondaryInsuranceState: data.secondaryInsuranceState,
-          secondaryInsuranceMemberId: data.secondaryInsuranceMemberId,
-
-          lifeInsurance: lifeInsuranceValue,
-          lifeInsuranceMemberId: data.lifeInsuranceMemberId,
-
-          disabilityInsurance: disabilityInsuranceValue,
-          disabilityInsuranceMemberId: data.disabilityInsuranceMemberId,
-
-          policy: data.policy,
-        });
+      error: (err) => {
+        this.loading.set(false);
+        console.error('Error getting insurance', err);
       },
     });
   }
 
-  private getInsuranceValue(label: string, providers: { value: string; label: string }[]): string {
-    return providers.find((p) => p.label === label)?.value ?? '';
-  }
-
-  initializeForm(): void {
+  private initializeForm(): void {
     this.insuranceForm = this.fb.group({
-      primaryInsurance: [this.insuranceData.primaryInsurance],
-      primaryInsuranceState: [this.insuranceData.primaryInsuranceState],
-      primaryInsuranceMemberId: [this.insuranceData.primaryInsuranceMemberId],
+      primaryInsurance: [''],
+      primaryInsuranceState: [''],
+      primaryInsuranceMemberId: [''],
 
-      secondaryInsurance: [this.insuranceData.secondaryInsurance],
-      secondaryInsuranceState: [this.insuranceData.secondaryInsuranceState],
-      secondaryInsuranceMemberId: [this.insuranceData.secondaryInsuranceMemberId],
+      secondaryInsurance: [''],
+      secondaryInsuranceState: [''],
+      secondaryInsuranceMemberId: [''],
 
-      lifeInsurance: [this.insuranceData.lifeInsurance],
-      lifeInsuranceMemberId: [this.insuranceData.lifeInsuranceMemberId],
+      lifeInsurance: [''],
+      lifeInsuranceMemberId: [''],
 
-      disabilityInsurance: [this.insuranceData.disabilityInsurance],
-      disabilityInsuranceMemberId: [this.insuranceData.disabilityInsuranceMemberId],
+      disabilityInsurance: [''],
+      disabilityInsuranceMemberId: [''],
 
-      policy: [this.insuranceData.policy],
+      policy: [''],
     });
-
-    this.toggleStateControl(
-      'primaryInsuranceState',
-      this.insuranceData.primaryInsurance === 'BCBS',
-    );
-
-    this.toggleStateControl(
-      'secondaryInsuranceState',
-      this.insuranceData.secondaryInsurance === 'BCBS',
-    );
   }
 
-  get insuranceSummaryItems() {
-    return [
-      {
-        label: 'Primary',
-        value: this.insuranceData.primaryInsuranceLabel,
-      },
-      {
-        label: 'Secondary',
-        value: this.insuranceData.secondaryInsuranceLabel,
-      },
-      {
-        label: 'Life',
-        value: this.insuranceData.lifeInsuranceLabel,
-      },
-      {
-        label: 'Disability',
-        value: this.insuranceData.disabilityInsuranceLabel,
-      },
-    ];
+  private patchForm(): void {
+    this.insuranceForm.patchValue({
+      primaryInsurance: this.insuranceData.primaryInsurance,
+      primaryInsuranceState: this.insuranceData.primaryInsuranceState,
+      primaryInsuranceMemberId: this.insuranceData.primaryInsuranceMemberId,
+
+      secondaryInsurance: this.insuranceData.secondaryInsurance,
+      secondaryInsuranceState: this.insuranceData.secondaryInsuranceState,
+      secondaryInsuranceMemberId: this.insuranceData.secondaryInsuranceMemberId,
+
+      lifeInsurance: this.insuranceData.lifeInsurance,
+      lifeInsuranceMemberId: this.insuranceData.lifeInsuranceMemberId,
+
+      disabilityInsurance: this.insuranceData.disabilityInsurance,
+      disabilityInsuranceMemberId: this.insuranceData.disabilityInsuranceMemberId,
+
+      policy: this.insuranceData.policy,
+    });
   }
 
-  setupBcbsListeners(): void {
+  private setupBcbsListeners(): void {
     this.insuranceForm.get('primaryInsurance')?.valueChanges.subscribe((value) => {
       this.toggleStateControl('primaryInsuranceState', value === 'BCBS');
     });
@@ -196,7 +150,6 @@ export class Insurance {
 
   private toggleStateControl(controlName: string, enable: boolean): void {
     const control = this.insuranceForm.get(controlName);
-
     if (!control) return;
 
     if (enable) {
@@ -207,56 +160,65 @@ export class Insurance {
     }
   }
 
-  saveInsurance(): void {
-    const formValue = this.insuranceForm.value;
+  // Getters start
 
-    this.insuranceData = {
-      ...this.insuranceData,
-
-      // Primary
-      primaryInsurance: formValue.primaryInsurance,
-      primaryInsuranceLabel: this.getInsuranceLabel(
-        formValue.primaryInsurance,
-        this.primaryInsuranceProviders,
-      ),
-      primaryInsuranceState: formValue.primaryInsuranceState,
-      primaryInsuranceMemberId: formValue.primaryInsuranceMemberId,
-
-      // Secondary
-      secondaryInsurance: formValue.secondaryInsurance,
-      secondaryInsuranceLabel: this.getInsuranceLabel(
-        formValue.secondaryInsurance,
-        this.secondaryInsuranceProviders,
-      ),
-      secondaryInsuranceState: formValue.secondaryInsuranceState,
-      secondaryInsuranceMemberId: formValue.secondaryInsuranceMemberId,
-
-      // Life
-      lifeInsurance: formValue.lifeInsurance,
-      lifeInsuranceLabel: this.getInsuranceLabel(
-        formValue.lifeInsurance,
-        this.lifeInsuranceProviders,
-      ),
-      lifeInsuranceMemberId: formValue.lifeInsuranceMemberId,
-
-      // Disability
-      disabilityInsurance: formValue.disabilityInsurance,
-      disabilityInsuranceLabel: this.getInsuranceLabel(
-        formValue.disabilityInsurance,
-        this.disabilityInsuranceProviders,
-      ),
-      disabilityInsuranceMemberId: formValue.disabilityInsuranceMemberId,
-
-      // Policy
-      policy: formValue.policy,
-    };
+  get insuranceSummaryItems() {
+    return [
+      {
+        label: 'Primary',
+        value: this.getLabel(
+          this.insuranceData.primaryInsurance ?? '',
+          this.primaryInsuranceProviders,
+        ),
+      },
+      {
+        label: 'Secondary',
+        value: this.getLabel(
+          this.insuranceData.secondaryInsurance ?? '',
+          this.secondaryInsuranceProviders,
+        ),
+      },
+      {
+        label: 'Life',
+        value: this.getLabel(this.insuranceData.lifeInsurance ?? '', this.lifeInsuranceProviders),
+      },
+      {
+        label: 'Disability',
+        value: this.getLabel(
+          this.insuranceData.disabilityInsurance ?? '',
+          this.disabilityInsuranceProviders,
+        ),
+      },
+    ];
   }
 
-  getInsuranceLabel(value: string, providers: any[]): string {
-    const insurance = providers.find((provider) => provider.value === value);
-
-    return insurance?.label || value;
+  getPrimaryLabel(): string {
+    return this.getLabel(this.insuranceData.primaryInsurance ?? '', this.primaryInsuranceProviders);
   }
+
+  getSecondaryLabel(): string {
+    return this.getLabel(
+      this.insuranceData.secondaryInsurance ?? '',
+      this.secondaryInsuranceProviders,
+    );
+  }
+
+  getLifeLabel(): string {
+    return this.getLabel(this.insuranceData.lifeInsurance ?? '', this.lifeInsuranceProviders);
+  }
+
+  getDisabilityLabel(): string {
+    return this.getLabel(
+      this.insuranceData.disabilityInsurance ?? '',
+      this.disabilityInsuranceProviders,
+    );
+  }
+
+  private getLabel(value: string, providers: any[]): string {
+    return providers.find((p) => p.value === value)?.label ?? value;
+  }
+
+  // getters end
 
   openEditSection(section: string): void {
     this.editingSection = section;
@@ -264,34 +226,73 @@ export class Insurance {
 
   cancelEdit(): void {
     this.editingSection = null;
+    this.patchForm();
+  }
 
-    this.insuranceForm.patchValue({
-      // Primary
-      primaryInsurance: this.insuranceData.primaryInsurance,
-      primaryInsuranceState: this.insuranceData.primaryInsuranceState,
-      primaryInsuranceMemberId: this.insuranceData.primaryInsuranceMemberId,
+  private buildUpdatePayload() {
+    const v = this.insuranceForm.getRawValue();
 
-      // Secondary
-      secondaryInsurance: this.insuranceData.secondaryInsurance,
-      secondaryInsuranceState: this.insuranceData.secondaryInsuranceState,
-      secondaryInsuranceMemberId: this.insuranceData.secondaryInsuranceMemberId,
+    return {
+      primaryInsurance: v.primaryInsurance,
+      primaryInsuranceState: v.primaryInsuranceState,
+      primaryInsuranceMemberId: v.primaryInsuranceMemberId,
 
-      // Life
-      lifeInsurance: this.insuranceData.lifeInsurance,
-      lifeInsuranceMemberId: this.insuranceData.lifeInsuranceMemberId,
+      secondaryInsurance: v.secondaryInsurance,
+      secondaryInsuranceState: v.secondaryInsuranceState,
+      secondaryInsuranceMemberId: v.secondaryInsuranceMemberId,
 
-      // Disability
-      disabilityInsurance: this.insuranceData.disabilityInsurance,
-      disabilityInsuranceMemberId: this.insuranceData.disabilityInsuranceMemberId,
+      lifeInsurance: v.lifeInsurance,
+      lifeInsuranceMemberId: v.lifeInsuranceMemberId,
 
-      // Policy
-      policy: this.insuranceData.policy,
-    });
+      disabilityInsurance: v.disabilityInsurance,
+      disabilityInsuranceMemberId: v.disabilityInsuranceMemberId,
+
+      policy: v.policy,
+    };
   }
 
   saveSection(): void {
-    this.saveInsurance();
+    const payload = this.buildUpdatePayload();
+    this.loading.set(true);
 
-    this.editingSection = null;
+    this.insuranceService.update(payload).subscribe({
+      next: (res) => {
+        this.loading.set(false);
+
+        if (!res?.success) return;
+
+        this.syncFromForm();
+
+        this.editingSection = null;
+        this.toastr.success('Insurance updated successfully');
+      },
+
+      error: (err) => {
+        this.loading.set(false);
+        this.toastr.error(err?.error?.message ?? 'Update failed');
+      },
+    });
+  }
+
+  private syncFromForm(): void {
+    const v = this.insuranceForm.getRawValue();
+
+    this.insuranceData = {
+      primaryInsurance: v.primaryInsurance,
+      primaryInsuranceState: v.primaryInsuranceState,
+      primaryInsuranceMemberId: v.primaryInsuranceMemberId,
+
+      secondaryInsurance: v.secondaryInsurance,
+      secondaryInsuranceState: v.secondaryInsuranceState,
+      secondaryInsuranceMemberId: v.secondaryInsuranceMemberId,
+
+      lifeInsurance: v.lifeInsurance,
+      lifeInsuranceMemberId: v.lifeInsuranceMemberId,
+
+      disabilityInsurance: v.disabilityInsurance,
+      disabilityInsuranceMemberId: v.disabilityInsuranceMemberId,
+
+      policy: v.policy,
+    };
   }
 }

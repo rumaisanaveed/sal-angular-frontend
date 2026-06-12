@@ -1,185 +1,191 @@
-<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
-  <div class="lg:col-span-3 space-y-4">
-    <!-- Primary insurance -->
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <app-insurance-card-header
-        title="Primary Insurance"
-        subtitle="Main medical insurance coverage"
-        sectionKey="primary"
-        [editingSection]="editingSection"
-        (edit)="openEditSection($event)"
-      />
-
-      <!-- View -->
-      <app-insurance-view-mode
-        *ngIf="editingSection !== 'primary'"
-        [data]="{
-          provider: insuranceData.primaryInsuranceLabel,
-          state: insuranceData.primaryInsuranceState,
-          memberId: insuranceData.primaryInsuranceMemberId,
-          showState: insuranceData.primaryInsurance === 'BCBS',
-        }"
-      />
-
-      <!-- Edit Form -->
-      <app-insurance-form
-        *ngIf="editingSection === 'primary'"
-        [form]="insuranceForm"
-        insuranceControl="primaryInsurance"
-        stateControl="primaryInsuranceState"
-        memberIdControl="primaryInsuranceMemberId"
-        [providers]="primaryInsuranceProviders"
-        label="Primary Insurance"
-        [showState]="true"
-        (cancel)="cancelEdit()"
-        (save)="saveSection()"
-      />
-    </div>
-
-    <!-- Secondary Insurance -->
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <app-insurance-card-header
-        title="Seconday Insurance"
-        subtitle="Additional insurance coverage"
-        sectionKey="secondary"
-        [editingSection]="editingSection"
-        (edit)="openEditSection($event)"
-      />
-
-      <!-- View -->
-      <app-insurance-view-mode
-        [data]="{
-          provider: insuranceData.secondaryInsurance,
-          state: insuranceData.secondaryInsuranceState,
-          memberId: insuranceData.secondaryInsuranceMemberId,
-          showState: insuranceData.secondaryInsurance === 'BCBS',
-        }"
-        *ngIf="editingSection !== 'secondary'"
-      />
-
-      <!-- Edit Form -->
-      <app-insurance-form
-        *ngIf="editingSection === 'secondary'"
-        [form]="insuranceForm"
-        insuranceControl="secondaryInsurance"
-        stateControl="secondaryInsuranceState"
-        memberIdControl="secondaryInsuranceMemberId"
-        [providers]="secondaryInsuranceProviders"
-        label="Secondary Insurance"
-        [showState]="true"
-        (cancel)="cancelEdit()"
-        (save)="saveSection()"
-      />
-    </div>
-
-    <!-- Life Insurance -->
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <app-insurance-card-header
-        title="Life Insurance"
-        subtitle="Life Insurance Information"
-        sectionKey="life"
-        [editingSection]="editingSection"
-        (edit)="openEditSection($event)"
-      />
-
-      <!-- View -->
-      <app-insurance-view-mode
-        [data]="{
-          provider: insuranceData.lifeInsurance,
-          memberId: insuranceData.lifeInsuranceMemberId,
-          showState: false,
-        }"
-        *ngIf="editingSection !== 'life'"
-      />
-
-      <!-- Edit Form -->
-      <app-insurance-form
-        *ngIf="editingSection === 'life'"
-        [form]="insuranceForm"
-        insuranceControl="lifeInsurance"
-        memberIdControl="lifeInsuranceMemberId"
-        [providers]="lifeInsuranceProviders"
-        label="Life Insurance"
-        [showState]="false"
-        (cancel)="cancelEdit()"
-        (save)="saveSection()"
-      />
-    </div>
-
-    <!-- Disability Insurance -->
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <app-insurance-card-header
-        title="Disability Insurance"
-        subtitle="Disability Insurance Information"
-        sectionKey="disability"
-        [editingSection]="editingSection"
-        (edit)="openEditSection($event)"
-      />
-
-      <!-- View -->
-      <app-insurance-view-mode
-        [data]="{
-          provider: insuranceData.disabilityInsurance,
-          memberId: insuranceData.disabilityInsuranceMemberId,
-          showState: false,
-        }"
-        *ngIf="editingSection !== 'disability'"
-      />
-
-      <!-- Edit -->
-      <app-insurance-form
-        *ngIf="editingSection === 'disability'"
-        [form]="insuranceForm"
-        insuranceControl="disabilityInsurance"
-        memberIdControl="disabilityInsuranceMemberId"
-        [providers]="lifeInsuranceProviders"
-        label="Disability Insurance"
-        [showState]="false"
-        (cancel)="cancelEdit()"
-        (save)="saveSection()"
-      />
-    </div>
+@if (loading()) {
+  <div class="flex items-center justify-center h-screen">
+    <h2 class="text-lg font-semibold text-gray-600">Loading...</h2>
   </div>
+} @else {
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+    <div class="lg:col-span-3 space-y-4">
+      <!-- Primary insurance -->
+      <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+        <app-insurance-card-header
+          title="Primary Insurance"
+          subtitle="Main medical insurance coverage"
+          sectionKey="primary"
+          [editingSection]="editingSection"
+          (edit)="openEditSection($event)"
+        />
 
-  <!-- Policy & Summary -->
-  <div class="lg:col-span-2 space-y-4">
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <app-insurance-card-header
-        title="Policy Notes"
-        subtitle="Additional insurance instructions"
-        sectionKey="policy"
-        [editingSection]="editingSection"
-        (edit)="openEditSection($event)"
-        *ngIf="editingSection !== 'policy'"
-      />
+        <!-- View -->
+        <app-insurance-view-mode
+          *ngIf="editingSection !== 'primary'"
+          [data]="{
+            provider: getPrimaryLabel(),
+            state: insuranceData.primaryInsuranceState,
+            memberId: insuranceData.primaryInsuranceMemberId || '',
+            showState: insuranceData.primaryInsurance === 'BCBS',
+          }"
+        />
 
-      <!-- View -->
-      <div
-        *ngIf="editingSection !== 'policy'"
-        class="bg-gray-50 rounded-lg p-4 min-h-fit text-sm text-gray-700 whitespace-pre-line"
-      >
-        {{ insuranceData.policy || 'No policy notes added.' }}
+        <!-- Edit Form -->
+        <app-insurance-form
+          *ngIf="editingSection === 'primary'"
+          [form]="insuranceForm"
+          insuranceControl="primaryInsurance"
+          stateControl="primaryInsuranceState"
+          memberIdControl="primaryInsuranceMemberId"
+          [providers]="primaryInsuranceProviders"
+          label="Primary Insurance"
+          [showState]="true"
+          (cancel)="cancelEdit()"
+          (save)="saveSection()"
+        />
       </div>
 
-      <!-- Edit -->
-      <form [formGroup]="insuranceForm" *ngIf="editingSection === 'policy'" class="space-y-4">
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Policy Notes</mat-label>
+      <!-- Secondary Insurance -->
+      <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+        <app-insurance-card-header
+          title="Seconday Insurance"
+          subtitle="Additional insurance coverage"
+          sectionKey="secondary"
+          [editingSection]="editingSection"
+          (edit)="openEditSection($event)"
+        />
 
-          <textarea matInput rows="7" formControlName="policy"></textarea>
-        </mat-form-field>
+        <!-- View -->
+        <app-insurance-view-mode
+          [data]="{
+            provider: getSecondaryLabel(),
+            state: insuranceData.secondaryInsuranceState,
+            memberId: insuranceData.secondaryInsuranceMemberId || '',
+            showState: insuranceData.secondaryInsurance === 'BCBS',
+          }"
+          *ngIf="editingSection !== 'secondary'"
+        />
 
-        <div class="flex justify-end gap-3">
-          <button mat-stroked-button type="button" (click)="cancelEdit()">Cancel</button>
+        <!-- Edit Form -->
+        <app-insurance-form
+          *ngIf="editingSection === 'secondary'"
+          [form]="insuranceForm"
+          insuranceControl="secondaryInsurance"
+          stateControl="secondaryInsuranceState"
+          memberIdControl="secondaryInsuranceMemberId"
+          [providers]="secondaryInsuranceProviders"
+          label="Secondary Insurance"
+          [showState]="true"
+          (cancel)="cancelEdit()"
+          (save)="saveSection()"
+        />
+      </div>
 
-          <button mat-flat-button color="primary" type="button" (click)="saveSection()">
-            Save
-          </button>
-        </div>
-      </form>
+      <!-- Life Insurance -->
+      <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+        <app-insurance-card-header
+          title="Life Insurance"
+          subtitle="Life Insurance Information"
+          sectionKey="life"
+          [editingSection]="editingSection"
+          (edit)="openEditSection($event)"
+        />
+
+        <!-- View -->
+        <app-insurance-view-mode
+          [data]="{
+            provider: getLifeLabel(),
+            memberId: insuranceData.lifeInsuranceMemberId || '',
+            showState: false,
+          }"
+          *ngIf="editingSection !== 'life'"
+        />
+
+        <!-- Edit Form -->
+        <app-insurance-form
+          *ngIf="editingSection === 'life'"
+          [form]="insuranceForm"
+          insuranceControl="lifeInsurance"
+          memberIdControl="lifeInsuranceMemberId"
+          [providers]="lifeInsuranceProviders"
+          label="Life Insurance"
+          [showState]="false"
+          (cancel)="cancelEdit()"
+          (save)="saveSection()"
+        />
+      </div>
+
+      <!-- Disability Insurance -->
+      <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+        <app-insurance-card-header
+          title="Disability Insurance"
+          subtitle="Disability Insurance Information"
+          sectionKey="disability"
+          [editingSection]="editingSection"
+          (edit)="openEditSection($event)"
+        />
+
+        <!-- View -->
+        <app-insurance-view-mode
+          [data]="{
+            provider: getDisabilityLabel(),
+            memberId: insuranceData.disabilityInsuranceMemberId || '',
+            showState: false,
+          }"
+          *ngIf="editingSection !== 'disability'"
+        />
+
+        <!-- Edit -->
+        <app-insurance-form
+          *ngIf="editingSection === 'disability'"
+          [form]="insuranceForm"
+          insuranceControl="disabilityInsurance"
+          memberIdControl="disabilityInsuranceMemberId"
+          [providers]="lifeInsuranceProviders"
+          label="Disability Insurance"
+          [showState]="false"
+          (cancel)="cancelEdit()"
+          (save)="saveSection()"
+        />
+      </div>
     </div>
 
-    <!-- Insurances summary -->
-    <app-insurance-summary [items]="insuranceSummaryItems" />
+    <!-- Policy & Summary -->
+    <div class="lg:col-span-2 space-y-4">
+      <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+        <app-insurance-card-header
+          title="Policy Notes"
+          subtitle="Additional insurance instructions"
+          sectionKey="policy"
+          [editingSection]="editingSection"
+          (edit)="openEditSection($event)"
+          *ngIf="editingSection !== 'policy'"
+        />
+
+        <!-- View -->
+        <div
+          *ngIf="editingSection !== 'policy'"
+          class="bg-gray-50 rounded-lg p-4 min-h-fit text-sm text-gray-700 whitespace-pre-line"
+        >
+          {{ insuranceData.policy || 'No policy notes added.' }}
+        </div>
+
+        <!-- Edit -->
+        <form [formGroup]="insuranceForm" *ngIf="editingSection === 'policy'" class="space-y-4">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Policy Notes</mat-label>
+
+            <textarea matInput rows="7" formControlName="policy"></textarea>
+          </mat-form-field>
+
+          <div class="flex justify-end gap-3">
+            <button mat-stroked-button type="button" (click)="cancelEdit()">Cancel</button>
+
+            <button mat-flat-button color="primary" type="button" (click)="saveSection()">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Insurances summary -->
+      <app-insurance-summary [items]="insuranceSummaryItems" />
+    </div>
   </div>
-</div>
+}

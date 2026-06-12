@@ -1,11 +1,13 @@
 <div>
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-sm sm:text-lg font-semibold text-gray-800">Patient Medical ID Card</h2>
-    <button mat-flat-button (click)="downloadCard()">Download Card</button>
+    <button mat-flat-button (click)="downloadCard()" [disabled]="loading()">Download Card</button>
   </div>
 
-  @if (loading()) {
-    <div class="text-lg font-semibold text-gray-600">Loading...</div>
+  @if (loading() || !cardData) {
+    <div class="flex items-center justify-center">
+      <h2 class="text-lg font-semibold text-gray-600">Loading...</h2>
+    </div>
   } @else {
     <div class="flex flex-col items-start gap-6">
       <!-- Card -->

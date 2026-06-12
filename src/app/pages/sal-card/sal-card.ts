@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { ICard } from '../../core/interfaces/card';
 import { CardService } from '../../core/services/card/card.service';
 import { QrCodeService } from '../../core/services/qr-code/qr-code.service';
@@ -23,35 +23,28 @@ export class SalCard implements OnInit {
   cardData = signal<any>(null);
 
   ngOnInit(): void {
-    this.loadQrCode();
-    this.getPatientCard();
+    this.loading.set(true);
+
+    forkJoin({
+      card: this.cardService.get(),
+      qr: this.qrCodeService.get(),
+    })
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe(({ card, qr }) => {
+        if (card.success) {
+          this.cardData.set(this.mapPatientCard(card.data));
+        }
+
+        if (qr.success) {
+          this.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(qr.data.qrCodeData);
+        }
+      });
   }
 
   formatList(items: string[], maxChars = 45): string {
     if (!items || items.length === 0) return '';
     const text = items.join(', ');
     return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
-  }
-
-  private getPatientCard() {
-    this.loading.set(true);
-    this.cardService
-      .get()
-      .pipe(
-        finalize(() => {
-          this.loading.set(false);
-        }),
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.cardData.set(this.mapPatientCard(res.data));
-          }
-        },
-        error: (err) => {
-          console.log('Failed to get patient card', err);
-        },
-      });
   }
 
   private mapPatientCard(data: ICard) {
@@ -87,27 +80,6 @@ export class SalCard implements OnInit {
           }
         : null,
     };
-  }
-
-  private loadQrCode() {
-    this.loading.set(true);
-    this.qrCodeService
-      .get()
-      .pipe(
-        finalize(() => {
-          this.loading.set(false);
-        }),
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.qrCodeUrl = this.sanitizer.bypassSecurityTrustUrl(res.data.qrCodeData);
-          }
-        },
-        error: (err) => {
-          console.log('Failed to get qr code', err);
-        },
-      });
   }
 
   downloadCard() {

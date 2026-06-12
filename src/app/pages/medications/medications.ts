@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { MedicationTableComponent } from '../../components/medications/medication-table.component/medication-table.component';
 import { ModeSwitchCardComponent } from '../../components/mode-switch-card/mode-switch-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
@@ -59,8 +59,9 @@ export class Medications {
   private toastr = inject(ToastrService);
   private cdr = inject(ChangeDetectorRef);
 
-  searchResults: MedicationSearchResult[] = [];
+  searchResults$ = new BehaviorSubject<MedicationSearchResult[]>([]);
   selectedMedication: MedicationSearchResult | null = null;
+  searchTerm = '';
 
   medicationForm = this.fb.group({
     mode: ['search'],
@@ -129,7 +130,7 @@ export class Medications {
 
   searchMedication(value: string) {
     if (!value.trim()) {
-      this.searchResults = [];
+      this.searchResults$.next([]);
       this.selectedMedication = null;
       return;
     }
@@ -140,8 +141,8 @@ export class Medications {
 
     this.medicationsService.searchMedication(value.trim()).subscribe({
       next: (data) => {
-        this.searchResults = this.transformSearchResponse(data);
-        this.cdr.detectChanges();
+        const results = this.transformSearchResponse(data);
+        this.searchResults$.next(results);
       },
       error: (err) => {
         console.log('Error getting search results', err);
@@ -261,7 +262,8 @@ export class Medications {
         next: (data) => {
           if (data.success) {
             this.toastr.success(data.message ?? 'Medication added successfully.');
-            this.searchResults = [];
+            this.searchResults$.next([]);
+            this.searchTerm = '';
             this.selectedMedication = null;
             this.loadMedications();
             this.medicationForm.reset({});

@@ -4,7 +4,7 @@
   <input
     matInput
     [(ngModel)]="searchTerm"
-    (input)="onSearch()"
+    (input)="onSearch($event.target.value)"
     placeholder="Search..."
     class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-primary focus:border-primary outline-none"
   />

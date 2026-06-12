@@ -7,69 +7,79 @@
   >
     <form [formGroup]="medicationForm" (ngSubmit)="submit()" class="space-y-5">
       <!-- ================= SEARCH MODE ================= -->
-      <div *ngIf="mode === 'search'" class="space-y-3">
-        <app-search-bar class="w-full mb-4" (search)="searchMedication($event)" />
-
-        <!-- Search Results -->
-        <app-selectable-list
-          [items]="searchResults"
-          labelKey="medicineName"
-          subLabelKey="dosage"
-          (onSelect)="selectMedication($event)"
-        />
-
-        @if (selectedMedication) {
-          <app-selected-item
-            [item]="{
-              title: selectedMedication.medicineName || '',
-              subtitle: selectedMedication.dosage || '',
-            }"
+      @if (mode === 'search') {
+        <div class="space-y-3">
+          <app-search-bar
+            [(searchTerm)]="searchTerm"
+            class="w-full mb-4"
+            (search)="searchMedication($event)"
           />
-        }
-      </div>
+
+          <!-- Search Results -->
+          <app-selectable-list
+            [items]="(searchResults$ | async) ?? []"
+            labelKey="medicineName"
+            subLabelKey="dosage"
+            (onSelect)="selectMedication($event)"
+          />
+
+          @if (selectedMedication) {
+            <app-selected-item
+              [item]="{
+                title: selectedMedication.medicineName || '',
+                subtitle: selectedMedication.dosage || '',
+              }"
+            />
+          }
+        </div>
+      }
 
       <!-- ================= Manual Mode ================= -->
-      <div *ngIf="mode === 'manual'" class="space-y-4">
-        <!-- Name -->
-        <div>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Medication name</mat-label>
-            <input matInput formControlName="medicineName" placeholder="Medication Name" />
-          </mat-form-field>
+      @if (mode === 'manual') {
+        <div class="space-y-4">
+          <!-- Name -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Medication name</mat-label>
+              <input matInput formControlName="medicineName" placeholder="Medication Name" />
+            </mat-form-field>
 
-          <small
-            *ngIf="
-              medicationForm.get('medicineName')?.invalid &&
-              medicationForm.get('medicineName')?.touched
-            "
-            class="text-red-500 text-xs"
-          >
-            This field is required
-          </small>
+            <small
+              *ngIf="
+                medicationForm.get('medicineName')?.invalid &&
+                medicationForm.get('medicineName')?.touched
+              "
+              class="text-red-500 text-xs"
+            >
+              This field is required
+            </small>
+          </div>
+
+          <!-- Dosage -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full compact">
+              <mat-label>Dosage</mat-label>
+              <mat-select formControlName="dosage">
+                <mat-option *ngFor="let dose of dosages" [value]="dose.value">{{
+                  dose.label
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <small
+              *ngIf="medicationForm.get('dosage')?.invalid && medicationForm.get('dosage')?.touched"
+              class="text-red-500 text-xs"
+            >
+              This field is required
+            </small>
+          </div>
         </div>
-
-        <!-- Dosage -->
-        <div>
-          <mat-form-field appearance="outline" class="w-full compact">
-            <mat-label>Dosage</mat-label>
-            <mat-select formControlName="dosage">
-              <mat-option *ngFor="let dose of dosages" [value]="dose.value">{{
-                dose.label
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <small
-            *ngIf="medicationForm.get('dosage')?.invalid && medicationForm.get('dosage')?.touched"
-            class="text-red-500 text-xs"
-          >
-            This field is required
-          </small>
-        </div>
-      </div>
+      }
 
       <div class="flex justify-end pt-2">
-        <button mat-flat-button color="primary" class="w-fit">Save</button>
+        <button mat-flat-button color="primary" class="w-fit" [disabled]="medicationForm.disabled">
+          Save
+        </button>
       </div>
     </form>
   </app-mode-switch-card>

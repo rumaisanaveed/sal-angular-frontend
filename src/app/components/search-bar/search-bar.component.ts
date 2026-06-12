@@ -13,11 +13,12 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
   styleUrl: './search-bar.component.css',
 })
 export class SearchBarComponent {
-  searchTerm = '';
+  @Input() searchTerm = '';
   @Input() class = '';
   @Input() debounceMs = 400;
 
   @Output() search = new EventEmitter<string>();
+  @Output() searchTermChange = new EventEmitter<string>();
 
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -30,8 +31,10 @@ export class SearchBarComponent {
       });
   }
 
-  onSearch() {
-    this.searchSubject.next(this.searchTerm);
+  onSearch(value: string) {
+    this.searchTerm = value;
+    this.searchTermChange.emit(value);
+    this.searchSubject.next(value);
   }
 
   ngOnDestroy() {

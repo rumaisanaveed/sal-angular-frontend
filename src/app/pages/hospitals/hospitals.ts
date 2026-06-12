@@ -16,7 +16,7 @@ import { AddHospitalPayload, Hospital, SelectedHospital } from '../../core/inter
 import { ConfirmationModalService } from '../../core/services/confirmation-modal-service/confirmation-modal.service';
 import { ModalService } from '../../core/services/modal-service/modal.service';
 import { HospitalsService } from '../../core/services/hospitals/hospitals.service';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -42,7 +42,9 @@ export class Hospitals {
   mode: InputModeEnum = InputModeEnum.Search;
   selectedHospital: SelectedHospital | null = null;
 
-  searchResults: SelectedHospital[] = [];
+  searchResults$ = new BehaviorSubject<SelectedHospital[]>([]);
+  searchResults = this.searchResults$.asObservable();
+  searchTerm = '';
 
   services = [
     { label: 'Emergency & Trauma', value: 'emergency_trauma' },
@@ -71,7 +73,6 @@ export class Hospitals {
   private modal = inject(ModalService);
   private confirmService = inject(ConfirmationModalService);
   private hospitalsService = inject(HospitalsService);
-  private cdr = inject(ChangeDetectorRef);
   private toastr = inject(ToastrService);
 
   hospitalForm = this.fb.group({
@@ -96,7 +97,7 @@ export class Hospitals {
   pastHospitals = new MatTableDataSource<Hospital>([]);
   columns = ['name', 'npiNumber', 'speciality', 'actions'];
 
-  allHospitals = [...this.searchResults];
+  allHospitals = this.searchResults$.asObservable();
 
   selectedHospitalType: 'active' | 'inactive' = 'active';
 
@@ -132,7 +133,7 @@ export class Hospitals {
 
   searchHospital(value: string) {
     if (!value.trim()) {
-      this.searchResults = [];
+      this.searchResults$.next([]);
       this.selectedHospital = null;
       return;
     }
@@ -143,8 +144,8 @@ export class Hospitals {
 
     this.hospitalsService.searchHospital(value.trim()).subscribe({
       next: (data) => {
-        this.searchResults = this.transformSearchResponse(data);
-        this.cdr.detectChanges();
+        const results = this.transformSearchResponse(data);
+        this.searchResults$.next(results);
       },
       error: (err) => {
         console.log('Error getting search results', err);
@@ -215,7 +216,8 @@ export class Hospitals {
         next: (data) => {
           if (data.success) {
             this.toastr.success(data?.message ?? 'Hospital addedd successfully.');
-            this.searchResults = [];
+            this.searchResults$.next([]);
+            this.searchTerm = '';
             this.selectedHospital = null;
             this.loadHospitals();
             this.hospitalForm.reset({});

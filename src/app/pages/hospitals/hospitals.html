@@ -7,10 +7,14 @@
     >
       <!-- Search Mode -->
       <div *ngIf="mode === 'search'" class="flex flex-col gap-6 max-h-[450px] overflow-y-auto">
-        <app-search-bar class="w-full" (search)="searchHospital($event)" />
+        <app-search-bar
+          [(searchTerm)]="searchTerm"
+          class="w-full"
+          (search)="searchHospital($event)"
+        />
 
         <app-selectable-list
-          [items]="searchResults"
+          [items]="(searchResults | async) ?? []"
           labelKey="name"
           subLabelKey="speciality"
           (onSelect)="selectHospital($event)"

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -32,6 +32,8 @@ export class Lifestyle {
   private lifestyleService = inject(LifestyleService);
   private toastr = inject(ToastrService);
 
+  loading = signal(false);
+
   lifestyleData: LifeStyleData = {};
 
   ngOnInit(): void {
@@ -39,14 +41,18 @@ export class Lifestyle {
   }
 
   private getLifeStyleData() {
+    this.loading.set(true);
+
     this.lifestyleService.get().subscribe({
       next: (res) => {
         if (res.success) {
           this.lifestyleData = res.data;
+          this.loading.set(false);
         }
       },
       error: (err) => {
         console.log('Error getting lifestyle data', err);
+        this.loading.set(false);
       },
     });
   }

@@ -170,13 +170,3 @@ Users can manage:
 7. Update your health records whenever necessary to keep information accurate.\
 
 ---
-
-## 📜 License
-
-This project is developed for educational and professional portfolio purposes. All rights reserved.
-
----
-
-
-
-
